@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "279952676753",
+    "firebase_url": "https://wmsformnf.firebaseio.com",
+    "project_id": "wmsformnf",
+    "storage_bucket": "wmsformnf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279952676753:android:2376bc55f3e6c78753ac30",
+        "android_client_info": {
+          "package_name": "fine.koaca.wmsformnf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279952676753-jl22ortejbfbkdofqt9vssjdlsagggu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0Y3Xc_MzTHGta8vB9q_TQcafq0cgbasU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279952676753-jl22ortejbfbkdofqt9vssjdlsagggu2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
