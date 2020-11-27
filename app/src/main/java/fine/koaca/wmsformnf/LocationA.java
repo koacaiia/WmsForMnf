@@ -23,12 +23,18 @@ CheckBox chk_a1,chk_a2,chk_a3,chk_a4,chk_ab1,chk_ab2,chk_ab3,chk_ab4,chk_b1,chk_
 TextView tex_chkValue;
 String str_location;
 String str_rackCount;
-
+String intent_bl;
+String intent_des;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
+
+        Intent intent=getIntent();
+        intent_bl=intent.getStringExtra("bl");
+        intent_des=intent.getStringExtra("des");
+
 
 
         Button button=findViewById(R.id.button3);
@@ -42,9 +48,12 @@ String str_rackCount;
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
                 String intent_location=tex_chkValue.getText().toString();
                 Intent intent=new Intent(LocationA.this,MainActivity.class);
                 intent.putExtra("location",intent_location);
+                intent.putExtra("bl",intent_bl);
+                intent.putExtra("des",intent_des);
                 startActivity(intent);
                 return true;
             }
@@ -90,7 +99,7 @@ String str_rackCount;
         chk_a2=findViewById(R.id.a2); chk_a3=findViewById(R.id.a3); chk_a4=findViewById(R.id.a4);
         chk_ab1=findViewById(R.id.ab1); chk_ab2=findViewById(R.id.ab2); chk_ab3=findViewById(R.id.ab3); chk_ab4=
                 findViewById(R.id.ab4);
-        chk_b1=findViewById(R.id.d1); chk_b2=findViewById(R.id.b2); chk_b3=findViewById(R.id.b3); chk_b4=findViewById(R.id.b4);
+        chk_b1=findViewById(R.id.b1); chk_b2=findViewById(R.id.b2); chk_b3=findViewById(R.id.b3); chk_b4=findViewById(R.id.b4);
         chk_c1=findViewById(R.id.c1); chk_c2=findViewById(R.id.c2); chk_c3=findViewById(R.id.c3); chk_c4=findViewById(R.id.c4);
         chk_d1=findViewById(R.id.d1); chk_d2=findViewById(R.id.d2); chk_d3=findViewById(R.id.d3); chk_d4=findViewById(R.id.d4);
         chk_cd1=findViewById(R.id.cd1); chk_cd2=findViewById(R.id.cd2); chk_cd3=findViewById(R.id.cd3); chk_cd4=
@@ -120,10 +129,6 @@ String str_rackCount;
             }
         str_location=tex_chkValue.getText().toString();
         tex_chkValue.setText(str_location+"_"+str_rackCount);
-
-
-
-
 
         }
 

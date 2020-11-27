@@ -10,16 +10,26 @@ public class List {
     String bl;
     String description;
     String location;
+    String date;
 
     public List(){
 
 
     }
 
-    public List(String bl, String description,String location) {
+    public List(String bl, String description,String location,String date) {
         this.bl = bl;
         this.description = description;
         this.location=location;
+        this.date=date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getLocation() {
@@ -47,12 +57,13 @@ public class List {
     }
 
 
-//    @Exclude
-//    public Map<String,Object> toMap(){
-//        HashMap<String,Object> result=new HashMap<>();
-//        result.put("bl",bl);
-//        result.put("description",description);
-//        result.put("location",location);
-//        return result;
-//    }
+    @Exclude
+    public Map<String,Object> toMap(){
+        HashMap<String,Object> result=new HashMap<>();
+        result.put("bl",bl);
+        result.put("description",description);
+        result.put("location",location);
+        result.put("date",date);
+        return result;
+    }
 }

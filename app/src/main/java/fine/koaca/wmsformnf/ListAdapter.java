@@ -27,6 +27,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.bl.setText(list.get(position).getBl());
         holder.description.setText(list.get(position).getDescription());
         holder.location.setText(list.get(position).getLocation());
+        holder.date.setText(list.get(position).getDate());
 
     }
 
@@ -50,6 +51,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         TextView bl;
         TextView description;
         TextView location;
+        TextView date;
 
 
         public  ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener) {
@@ -57,8 +59,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             this.bl=itemView.findViewById(R.id.textView2);
             this.description=itemView.findViewById(R.id.textView);
             this.location=itemView.findViewById(R.id.text_location);
-
-
+            this.date=itemView.findViewById(R.id.text_Date);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,7 +79,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 //
 //                        Toast.makeText(MainActivity.this, "koaca", Toast.LENGTH_SHORT).show();
 //                        notifyItemChanged(pos);
-
                     }
                 }
             });

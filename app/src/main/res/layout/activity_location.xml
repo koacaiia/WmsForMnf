@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#78BBF1"
             android:orientation="vertical">
 
             <CheckBox
@@ -28,28 +29,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="F4"
+                android:textStyle="bold|italic" />
 
             <CheckBox
                 android:id="@+id/f3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="F3"
+                android:textStyle="bold|italic" />
 
             <CheckBox
                 android:id="@+id/f2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="F2"
+                android:textStyle="bold|italic" />
 
             <CheckBox
                 android:id="@+id/f1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="F1"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,7 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="EF4"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -72,7 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="EF3"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -80,7 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="EF2"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -88,7 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="EF1"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -96,6 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#78BBF1"
             android:orientation="vertical">
 
             <CheckBox
@@ -104,7 +114,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="E4"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -112,7 +123,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="E3"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -120,7 +132,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="E2"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -128,13 +141,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="E1"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#78BBF1"
             android:orientation="vertical">
 
             <CheckBox
@@ -143,7 +158,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="D4"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -151,7 +167,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="D3"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -159,7 +176,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="D2"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -167,7 +185,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="D1"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -182,7 +201,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="CD4"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -190,7 +210,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="CD3"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -198,7 +219,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="CD2"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -206,13 +228,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="CD1"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#78BBF1"
             android:orientation="vertical">
 
             <CheckBox
@@ -221,7 +245,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="C4"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -229,7 +254,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="C3"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -237,7 +263,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="C2"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -245,13 +272,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="C1"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#78BBF1"
             android:orientation="vertical">
 
             <CheckBox
@@ -260,7 +289,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="B4"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -268,7 +298,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="B3"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -276,7 +307,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="B2"
+                android:textStyle="bold|italic" />
 
             <CheckBox
 
@@ -284,7 +316,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="B1"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout
@@ -299,7 +332,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="AB4"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -307,7 +341,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="AB3"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -315,7 +350,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="AB2"
+                android:textStyle="bold" />
 
             <CheckBox
 
@@ -323,13 +359,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="CheckBox" />
+                android:text="AB1"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#78BBF1"
             android:orientation="vertical">
 
 
@@ -338,21 +376,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="A4" />
+                android:text="A4"
+                android:textStyle="bold|italic" />
 
             <CheckBox
                 android:id="@+id/a3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="A3" />
+                android:text="A3"
+                android:textStyle="bold|italic" />
 
             <CheckBox
                 android:id="@+id/a2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="A2" />
+                android:text="A2"
+                android:textStyle="bold|italic" />
 
             <CheckBox
                 android:id="@+id/a1"
@@ -361,7 +402,7 @@
                 android:layout_weight="1"
 
                 android:text="A1"
-                android:textStyle="bold" />
+                android:textStyle="bold|italic" />
 
         </LinearLayout>
 
