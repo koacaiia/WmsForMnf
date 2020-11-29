@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -49,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btn_databaseReg;
     Button btn_dataInsert;
     Button btn_dataDelete;
-    static ArrayList<String> arrayIndex =  new ArrayList<String>();
-    static ArrayList<String> arrayData = new ArrayList<String>();
+    Button btn_webList;
+    String sort="date";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +65,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(layoutManager);
         listItems=new ArrayList<>();
         textView_bl=findViewById(R.id.textView3);
+        textView_bl.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "B/L 별 정렬진행", Toast.LENGTH_SHORT).show();
+                sort="bl";
+                getFirebaseDatabase();
+                return true;
+            }
+        });
         textView_des=findViewById(R.id.textView4);
+        textView_des.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "품목별 정렬 진행", Toast.LENGTH_SHORT).show();
+                sort="description";
+                getFirebaseDatabase();
+                return true;
+            }
+        });
         textView_loc=findViewById(R.id.textView5);
+        textView_loc.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "location 별 정렬 진행", Toast.LENGTH_SHORT).show();
+                sort="loc";
+                getFirebaseDatabase();
+                return true;
+            }
+        });
         textView_date=findViewById(R.id.textView_date);
-        etc=findViewById(R.id.edit_etc);
+        textView_date.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "반입일 별 정렬 진행", Toast.LENGTH_SHORT).show();
+                sort="date";
+                getFirebaseDatabase();
+                return true;
+            }
+        });
+
 
 
         btn_databaseReg=findViewById(R.id.btn_databaseReg);
@@ -75,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_dataInsert.setOnClickListener(this);
         btn_dataDelete=findViewById(R.id.btn_dataDelete);
         btn_dataDelete.setOnClickListener(this);
+        btn_webList=findViewById(R.id.btn_web);
+        btn_webList.setOnClickListener(this);
+
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("MnF");
@@ -113,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String des=listItems.get(position).getDescription();
                 String loc=listItems.get(position).getLocation();
                 String date=listItems.get(position).getDate();
-//                Toast.makeText(getApplicationContext(), bl, Toast.LENGTH_SHORT).show();
+//
                 textView_bl.setText(bl);
                 textView_des.setText(des);
                 textView_date.setText(date);
@@ -121,16 +162,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
-
-        Button btn_etc=findViewById(R.id.btn_etc);
-        btn_etc.setOnClickListener(new View.OnClickListener() {
+        adapter.setLongClickListener(new OnItemLongClickListener() {
             @Override
-            public void onClick(View v) {
-                String location="a";
-                locationSelect(location);
+            public void onLongItemClick(ListAdapter.ListViewHolder listViewHolder, View v, int pos) {
+                bl=textView_bl.getText().toString();
+                description=textView_des.getText().toString();
+                location=textView_loc.getText().toString();
+
+                AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("데이터 삭제")
+                        .setMessage("해당 데이터를 삭제 하시겠습니까?"+"\n"+bl+"\n" +
+                                description+"\n"+location)
+                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                postFirebaseDatabase(false);
+                                getFirebaseDatabase();
+                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();
+
+                            }
+                        })
+                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .create()
+                        .show();
+
             }
         });
+
         Intent intent=getIntent();
         String str_location=intent.getStringExtra("location");
         String str_bl=intent.getStringExtra("bl");
@@ -151,17 +214,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getFirebaseDatabase();
         }
 
-        private AdapterView.OnItemLongClickListener longClickListener=new AdapterView.OnItemLongClickListener(){
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                return false;
-            }
-        };
+//
 
         public void getFirebaseDatabase(){
 
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+
+            ValueEventListener postListener=new ValueEventListener(){
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     listItems.clear();
@@ -177,14 +238,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this, "Data Server connection Error", Toast.LENGTH_SHORT).show();
 
                 }
-            });
+            };
+
+            Query sortbyAge=databaseReference.orderByChild(sort);
+            sortbyAge.addListenerForSingleValueEvent(postListener);
 
         }
 
 
     public void locationSelect(String location){
 //        Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(MainActivity.this,LocationA.class);
+//        Intent intent=new Intent(MainActivity.this,LocationA.class);
+        Intent intent=new Intent(MainActivity.this,Location.class);
         String data_bl=textView_bl.getText().toString();
         String data_description=textView_des.getText().toString();
         intent.putExtra("bl",data_bl);
@@ -232,34 +297,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_dataDelete:
-                bl=textView_bl.getText().toString();
-                description=textView_des.getText().toString();
-                location=textView_loc.getText().toString();
-
-                AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("데이터 삭제")
-                        .setMessage("해당 데이터를 삭제 하시겠습니까?"+"\n"+bl+"\n" +
-                                description+"\n"+location)
-                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                postFirebaseDatabase(false);
-                                getFirebaseDatabase();
-                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();
-
-                            }
-                        })
-                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .create()
-                        .show();
-
+                String location="a";
+                locationSelect(location);
 
                 break;
+
+            case R.id.btn_web:
+                Intent intent=new Intent(MainActivity.this,WebList.class);
+                String data_bl=textView_bl.getText().toString();
+                intent.putExtra("bl",data_bl);
+                startActivity(intent);
         }
 
     }

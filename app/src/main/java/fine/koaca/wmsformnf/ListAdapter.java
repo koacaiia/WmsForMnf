@@ -1,25 +1,24 @@
 package fine.koaca.wmsformnf;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> implements OnListItemClickListener{
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> implements OnListItemClickListener,OnItemLongClickListener{
     ArrayList<List> list;
     OnListItemClickListener listener;
+    OnItemLongClickListener longClickListener;
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.list,parent,false);
-        return new ListViewHolder(view,this);
+        return new ListViewHolder(view,this,this);
     }
 
     @Override
@@ -39,6 +38,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         this.listener=listener;
     }
 
+    public void setLongClickListener(OnItemLongClickListener longClickListener){
+        this.longClickListener=longClickListener;
+    }
+
     @Override
     public void onItemClick(ListViewHolder holder, View view, int position) {
         if(listener !=null){
@@ -46,6 +49,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         }
 
     }
+    @Override
+    public void onLongItemClick(ListViewHolder holder, View view, int position) {
+        if(longClickListener !=null){
+            longClickListener.onLongItemClick(holder,view,position);
+        }
+
+    }
+
+
 
     public class ListViewHolder extends RecyclerView.ViewHolder{
         TextView bl;
@@ -54,7 +66,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         TextView date;
 
 
-        public  ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener) {
+        public  ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,final OnItemLongClickListener longClickListener) {
             super(itemView);
             this.bl=itemView.findViewById(R.id.textView2);
             this.description=itemView.findViewById(R.id.textView);
@@ -80,6 +92,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 //                        Toast.makeText(MainActivity.this, "koaca", Toast.LENGTH_SHORT).show();
 //                        notifyItemChanged(pos);
                     }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos=getAdapterPosition();
+                    if(longClickListener !=null){
+                        longClickListener.onLongItemClick(ListViewHolder.this,v,pos);
+
+                    }
+                    return true;
                 }
             });
         }

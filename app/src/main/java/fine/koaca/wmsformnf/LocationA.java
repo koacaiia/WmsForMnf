@@ -3,7 +3,6 @@ package fine.koaca.wmsformnf;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,11 +11,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class LocationA extends AppCompatActivity {
 CheckBox chk_a1,chk_a2,chk_a3,chk_a4,chk_ab1,chk_ab2,chk_ab3,chk_ab4,chk_b1,chk_b2,chk_b3,chk_b4,chk_c1,chk_c2,chk_c3,chk_c4,
         chk_cd1,chk_cd2,chk_cd3,chk_cd4,chk_d1,chk_d2,chk_d3,chk_d4,chk_e1,chk_e2,chk_e3,chk_e4,chk_ef1,chk_ef2,chk_ef3,chk_ef4,chk_f1,chk_f2,chk_f3,chk_f4;
+
     Integer[] rackCount={0,1,2,3,4,5};
     Spinner spinner_rack;
 
@@ -29,7 +28,7 @@ String intent_des;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location);
+        setContentView(R.layout.location_backup);
 
         Intent intent=getIntent();
         intent_bl=intent.getStringExtra("bl");
@@ -37,7 +36,7 @@ String intent_des;
 
 
 
-        Button button=findViewById(R.id.button3);
+        Button button=findViewById(R.id.btn_locationReg);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +68,7 @@ String intent_des;
                 spinner_rack.setTag(rackCount[position]);
 
                 str_rackCount=Integer.toString(rackCount[position]);
+//                filterChkBox();
             }
 
             @Override
@@ -78,7 +78,7 @@ String intent_des;
         });
 
 
-        tex_chkValue=findViewById(R.id.checkValue);
+        tex_chkValue=findViewById(R.id.txt_location);
         tex_chkValue.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -125,9 +125,13 @@ String intent_des;
         for(int i=0;i<chkCount;i++){
             if(chkBox_list[i].isChecked()){
                 String chkValue=chkBox_list[i].getText().toString();
-                tex_chkValue.append(chkValue); }
+
+                    tex_chkValue.append("  "+chkValue+" ");
+
+                }
             }
         str_location=tex_chkValue.getText().toString();
+
         tex_chkValue.setText(str_location+"_"+str_rackCount);
 
         }
