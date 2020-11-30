@@ -11,17 +11,27 @@ public class List {
     String description;
     String location;
     String date;
+    String count;
 
     public List(){
 
 
     }
 
-    public List(String bl, String description,String location,String date) {
+    public List(String bl, String description,String location,String date,String count) {
         this.bl = bl;
         this.description = description;
         this.location=location;
         this.date=date;
+        this.count=count;
+    }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
     }
 
     public String getDate() {
@@ -64,6 +74,7 @@ public class List {
         result.put("description",description);
         result.put("location",location);
         result.put("date",date);
+        result.put("count",count);
         return result;
     }
 }

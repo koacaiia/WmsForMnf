@@ -1,5 +1,7 @@
 package fine.koaca.wmsformnf;
 
+import android.graphics.Color;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.RED;
+import static android.graphics.Color.red;
+
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> implements OnListItemClickListener,OnItemLongClickListener{
     ArrayList<List> list;
     OnListItemClickListener listener;
     OnItemLongClickListener longClickListener;
+
+    //onClick 이벤트 발생시, 클릭된 아이템의 position( ViewHolder.getAdapterPosition() )과 선택상태를 저장해 놓고 토글 시키면 될것 같습니다.
+    //position별 선택상태를 저장하는 구조는 SparseBooleanArray를 사용하겠습니다.
+
+    private SparseBooleanArray mSelectedItems=new SparseBooleanArray(0);
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -23,10 +34,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
+
+        String location_chk=list.get(position).getLocation();
+
         holder.bl.setText(list.get(position).getBl());
         holder.description.setText(list.get(position).getDescription());
         holder.location.setText(list.get(position).getLocation());
         holder.date.setText(list.get(position).getDate());
+        holder.count.setText(list.get(position).getCount());
+
+
+
+        if(location_chk.equals("")){
+            holder.itemView.setBackgroundColor(Color.BLUE);
+        }else{
+            holder.itemView.setBackgroundColor(Color.WHITE);
+        }
 
     }
 
@@ -64,6 +87,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         TextView description;
         TextView location;
         TextView date;
+        TextView count;
 
 
         public  ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,final OnItemLongClickListener longClickListener) {
@@ -72,6 +96,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             this.description=itemView.findViewById(R.id.textView);
             this.location=itemView.findViewById(R.id.text_location);
             this.date=itemView.findViewById(R.id.text_Date);
+            this.count=itemView.findViewById(R.id.textView_Rotate);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,19 +104,19 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
                     int pos=getAdapterPosition();
                     if(listener !=null){
                         listener.onItemClick(ListViewHolder.this,v,pos);
-//                    if(pos !=RecyclerView.NO_POSITION){
-//
-//                        String recycler_bl=list.get(pos).getBl();
-//                        String recycler_des=list.get(pos).getDescription();
-//                        Log.i("recyler",recycler_bl);
-////                        MainActivity mainActivity=new MainActivity();
-////
-////                       mainActivity.textView.setText(recycler_bl);
-////                       mainActivity.textView.setText(recycler_des);
-//
-//                        Toast.makeText(MainActivity.this, "koaca", Toast.LENGTH_SHORT).show();
-//                        notifyItemChanged(pos);
                     }
+                    if(mSelectedItems.get(pos,true)){
+                        mSelectedItems.put(pos,false);
+                        bl.setTextColor(RED);
+                        description.setTextColor(RED);
+                        count.setTextColor(RED);
+                    }else{
+                        mSelectedItems.put(pos,true);
+                        bl.setTextColor(BLACK);
+                        description.setTextColor(BLACK);
+                        count.setTextColor(BLACK);
+                    }
+
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {

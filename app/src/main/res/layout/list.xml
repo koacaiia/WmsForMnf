@@ -34,7 +34,7 @@
                                     android:layout_weight="1"
                                     android:gravity="center"
                                     android:hint="품명"
-                                    android:text="품명"
+
                                     android:textStyle="bold|italic" />
 
                                 <TextView
@@ -44,7 +44,7 @@
                                     android:layout_weight="1"
                                     android:gravity="center"
                                     android:hint="Bl_number"
-                                    android:text="Bl_number"
+
                                     android:textStyle="bold|italic" />
                         </LinearLayout>
 
@@ -61,8 +61,15 @@
                                     android:layout_weight="1"
                                     android:gravity="center"
                                     android:hint="반입일"
-                                    android:text="TextView"
                                     android:textStyle="bold|italic" />
+
+                                <TextView
+                                    android:id="@+id/textView_Rotate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:hint="찻수" />
 
                                 <TextView
                                     android:id="@+id/text_location"

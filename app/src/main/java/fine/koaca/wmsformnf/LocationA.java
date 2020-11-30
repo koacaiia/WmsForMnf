@@ -88,14 +88,6 @@ String intent_des;
             }
         });
         chk_a1=findViewById(R.id.a1);
-//        chk_a1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//              if(chk_a1.isChecked()){
-//                tex_chkValue.append(chk_a1.getText().toString());
-//                 }
-//            }
-//        });
         chk_a2=findViewById(R.id.a2); chk_a3=findViewById(R.id.a3); chk_a4=findViewById(R.id.a4);
         chk_ab1=findViewById(R.id.ab1); chk_ab2=findViewById(R.id.ab2); chk_ab3=findViewById(R.id.ab3); chk_ab4=
                 findViewById(R.id.ab4);

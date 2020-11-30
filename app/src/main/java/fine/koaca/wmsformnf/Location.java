@@ -42,6 +42,8 @@ public class Location extends AppCompatActivity {
 
     String intent_bl;
     String intent_des;
+    String intent_date;
+    String intent_count;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,8 +53,15 @@ public class Location extends AppCompatActivity {
         viewPager=findViewById(R.id.pager_location);
         textView_location=findViewById(R.id.txt_location);
 
+        Intent intent=getIntent();
+        intent_bl=intent.getStringExtra("bl");
+        intent_des=intent.getStringExtra("des");
+        intent_date=intent.getStringExtra("date");
+        intent_count=intent.getStringExtra("count");
+
+
         LayoutInflater inflater=getLayoutInflater();
-        View v_locationA=inflater.inflate(R.layout.location_a,null );
+        View v_locationA=inflater.inflate(R.layout.location_a,null);
         View v_locationB=inflater.inflate(R.layout.location_b,null);
         View v_locationC=inflater.inflate(R.layout.location_c,null);
         View v_locationD=inflater.inflate(R.layout.location_d,null);
@@ -174,6 +183,7 @@ public class Location extends AppCompatActivity {
                 intent.putExtra("location",intent_location);
                 intent.putExtra("bl",intent_bl);
                 intent.putExtra("des",intent_des);
+                intent.putExtra("count",intent_count);
                 startActivity(intent);
 
                 return true;

@@ -38,13 +38,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText textView_des;
     EditText textView_loc;
     TextView textView_date;
+    TextView textView_count;
 
     String ID;
     String bl;
     String description;
     String location;
     String date;
-    EditText etc;
+    String rotate;
     String dataMessage;
 
     Button btn_databaseReg;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(MainActivity.this, "location 별 정렬 진행", Toast.LENGTH_SHORT).show();
-                sort="loc";
+                sort="location";
                 getFirebaseDatabase();
                 return true;
             }
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
+        textView_count=findViewById(R.id.textView_count);
 
 
 
@@ -120,28 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("MnF");
 
-//        database=FirebaseDatabase.getInstance();
-//        databaseReference=database.getReference("MnF");
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                listItems.clear();
-//                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-//                    List data=dataSnapshot.getValue(List.class);
-//                    listItems.add(data);
-//                }
-//                adapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(MainActivity.this, "Data Server connection Error", Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-//        adapter=new ListAdapter(listItems);
-//        List items=new List("q123","qwesadf");
-//        listItems.add(items);
         adapter=new ListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
 
@@ -154,11 +134,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String des=listItems.get(position).getDescription();
                 String loc=listItems.get(position).getLocation();
                 String date=listItems.get(position).getDate();
-//
+                String count=listItems.get(position).getCount();
+
                 textView_bl.setText(bl);
                 textView_des.setText(des);
                 textView_date.setText(date);
                 textView_loc.setText(loc);
+                textView_count.setText(count);
 
             }
         });
@@ -198,29 +180,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String str_location=intent.getStringExtra("location");
         String str_bl=intent.getStringExtra("bl");
         String str_des=intent.getStringExtra("des");
-//
-//        TextView textViewEtc=findViewById(R.id.textView_etc);
-//        textViewEtc.setText(str_location);
+        String str_date=intent.getStringExtra("date");
+        String str_count=intent.getStringExtra("count");
         if(str_location !=null){
             textView_bl.setText(str_bl);
             textView_des.setText(str_des);
             textView_loc.setText(str_location);
+            textView_date.setText(str_date);
+            textView_count.setText(str_count);
         }
-//        if(savedInstanceState !=null){
-//            String data=savedInstanceState.getString("data");
-//            textView.setText(data);
-//        }else{
-//            Toast.makeText(this, "18", Toast.LENGTH_SHORT).show();
         getFirebaseDatabase();
         }
 
-//
 
         public void getFirebaseDatabase(){
-
-//            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-
 
             ValueEventListener postListener=new ValueEventListener(){
                 @Override
@@ -247,13 +220,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void locationSelect(String location){
-//        Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
-//        Intent intent=new Intent(MainActivity.this,LocationA.class);
         Intent intent=new Intent(MainActivity.this,Location.class);
         String data_bl=textView_bl.getText().toString();
         String data_description=textView_des.getText().toString();
+        String data_date=textView_date.getText().toString();
+        String data_count=textView_count.getText().toString();
         intent.putExtra("bl",data_bl);
         intent.putExtra("des",data_description);
+        intent.putExtra("date",data_date);
+        intent.putExtra("count",data_count);
         startActivity(intent);
     }
     public void postFirebaseDatabase(boolean add){
@@ -261,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
         if(add){
-            List list=new List(bl,description,location,date);
+            List list=new List(bl,description,location,date,rotate);
             postValues=list.toMap();
              }
         childUpdates.put(bl+"_"+description+"/",postValues);
