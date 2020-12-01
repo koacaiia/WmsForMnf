@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String description;
     String location;
     String date;
-    String rotate;
+    String count;
     String dataMessage;
 
     Button btn_databaseReg;
@@ -236,10 +236,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
         if(add){
-            List list=new List(bl,description,location,date,rotate);
+            List list=new List(bl,description,location,date,count);
             postValues=list.toMap();
              }
-        childUpdates.put(bl+"_"+description+"/",postValues);
+        childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
         databaseReference.updateChildren(childUpdates);
     }
 
@@ -261,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 description=textView_des.getText().toString();
                 location=textView_loc.getText().toString();
                 date=textView_date.getText().toString();
+                count=textView_count.getText().toString();
 //                Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
                 postFirebaseDatabase(true);
                 getFirebaseDatabase();

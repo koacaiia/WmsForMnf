@@ -183,6 +183,7 @@ public class Location extends AppCompatActivity {
                 intent.putExtra("location",intent_location);
                 intent.putExtra("bl",intent_bl);
                 intent.putExtra("des",intent_des);
+                intent.putExtra("date",intent_date);
                 intent.putExtra("count",intent_count);
                 startActivity(intent);
 
