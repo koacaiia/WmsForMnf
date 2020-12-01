@@ -154,22 +154,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 location=textView_loc.getText().toString();
 
                 AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("데이터 삭제")
-                        .setMessage("해당 데이터를 삭제 하시겠습니까?"+"\n"+bl+"\n" +
+                dialog.setTitle("데이터 삭제,카메라 촬영")
+                        .setMessage("해당 BL 화물에 대한 자료삭제 ,입고촬영 선택"+"\n"+bl+"\n" +
                                 description+"\n"+location)
-                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("자료 삭제", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postFirebaseDatabase(false);
-                                getFirebaseDatabase();
-                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();
+
+                                AlertDialog.Builder dialog_Delete=new AlertDialog.Builder(MainActivity.this);
+                                dialog_Delete.setTitle("자료삭제 선택창")
+                                        .setMessage("하기 해당 화물에 대한 삭제를 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+"\n"+location)
+                                        .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                postFirebaseDatabase(false);
+                                                getFirebaseDatabase();
+                                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        })
+                                        .setNegativeButton("삭제취소", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .create()
+                                .show();
+
 
                             }
                         })
-                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "취소 하였습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNeutralButton("Take Picture", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent=new Intent(MainActivity.this,CameraCapture.class);
+                                startActivity(intent);
+
                             }
                         })
                         .create()
