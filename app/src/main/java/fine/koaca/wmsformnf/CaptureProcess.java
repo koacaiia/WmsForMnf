@@ -31,8 +31,13 @@ public class CaptureProcess implements SurfaceHolder.Callback{
         camera.startPreview();
     }
 
+    public void captureProcess(){
+
+    }
+
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        preViewProcess();
 
     }
 
