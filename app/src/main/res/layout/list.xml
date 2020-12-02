@@ -33,7 +33,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
                                     android:gravity="center"
-                                    android:hint="품명"
+                                    android:hint="BL"
 
                                     android:textStyle="bold|italic" />
 
@@ -43,7 +43,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
                                     android:gravity="center"
-                                    android:hint="Bl_number"
+                                    android:hint="품명"
 
                                     android:textStyle="bold|italic" />
                         </LinearLayout>
@@ -82,6 +82,16 @@
                                     android:hint="Location"
                                     android:textStyle="bold|italic" />
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textView_list_mark"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.3"
+                            android:gravity="center"
+                            android:hint="비고란"
+                            android:textColor="#FF0000"
+                            android:textStyle="bold|italic" />
 
                 </LinearLayout>
 

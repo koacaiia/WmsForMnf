@@ -42,6 +42,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.location.setText(list.get(position).getLocation());
         holder.date.setText(list.get(position).getDate());
         holder.count.setText(list.get(position).getCount());
+        holder.remark.setText(list.get(position).getRemark());
+
 
 
 
@@ -88,6 +90,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         TextView location;
         TextView date;
         TextView count;
+        TextView remark;
 
 
         public  ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,final OnItemLongClickListener longClickListener) {
@@ -97,6 +100,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             this.location=itemView.findViewById(R.id.text_location);
             this.date=itemView.findViewById(R.id.text_Date);
             this.count=itemView.findViewById(R.id.textView_Rotate);
+            this.remark=itemView.findViewById(R.id.textView_list_mark);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

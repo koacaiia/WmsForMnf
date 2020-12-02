@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,6 +27,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +39,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText textView_bl;
     EditText textView_des;
     EditText textView_loc;
+    EditText editText_remark;
     TextView textView_date;
-    TextView textView_count;
+    EditText textView_count;
 
     String ID;
     String bl;
@@ -49,11 +50,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String date;
     String count;
     String dataMessage;
+    String selectedItemsText;
+    String remark;
 
     Button btn_databaseReg;
-    Button btn_dataInsert;
-    Button btn_dataDelete;
-    Button btn_webList;
+    Button btn_datalocation;
+    Button btn_camera;
     String sort="date";
 
 
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         textView_date=findViewById(R.id.textView_date);
+        textView_date.setOnClickListener(this);
         textView_date.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -108,23 +111,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         textView_count=findViewById(R.id.textView_count);
+        editText_remark=findViewById(R.id.edit_remark);
+        editText_remark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               remark= editText_remark.getText().toString();
+                editText_remark.setText(remark);
+            }
+        });
 
 
 
         btn_databaseReg=findViewById(R.id.btn_databaseReg);
         btn_databaseReg.setOnClickListener(this);
-        btn_dataInsert=findViewById(R.id.btn_date);
-        btn_dataInsert.setOnClickListener(this);
-        btn_dataDelete=findViewById(R.id.btn_dataDelete);
-        btn_dataDelete.setOnClickListener(this);
-        btn_webList=findViewById(R.id.btn_web);
-        btn_webList.setOnClickListener(this);
+
+        btn_datalocation=findViewById(R.id.btn_location);
+
+        btn_datalocation.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                longClickItem();
+                return true;
+            }
+        });
+        btn_datalocation.setOnClickListener(this);
+        btn_camera=findViewById(R.id.btn_camera);
+        btn_camera.setOnClickListener(this);
+
 
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("MnF");
 
         adapter=new ListAdapter(listItems,this);
+
         recyclerView.setAdapter(adapter);
 
 
@@ -137,12 +158,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String loc=listItems.get(position).getLocation();
                 String date=listItems.get(position).getDate();
                 String count=listItems.get(position).getCount();
+                String remark=listItems.get(position).getRemark();
 
                 textView_bl.setText(bl);
                 textView_des.setText(des);
                 textView_date.setText(date);
                 textView_loc.setText(loc);
                 textView_count.setText(count);
+                editText_remark.setText(remark);
+
 
             }
         });
@@ -154,16 +178,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 location=textView_loc.getText().toString();
 
                 AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("데이터 삭제,카메라 촬영")
-                        .setMessage("해당 BL 화물에 대한 자료삭제 ,입고촬영 선택"+"\n"+bl+"\n" +
+                dialog.setTitle("데이터 삭제,화물조회 ")
+                        .setMessage("해당 BL 화물에 대한 자료 삭제,조회"+"\n"+bl+"\n" +
                                 description+"\n"+location)
-                        .setPositiveButton("자료 삭제", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 AlertDialog.Builder dialog_Delete=new AlertDialog.Builder(MainActivity.this);
-                                dialog_Delete.setTitle("자료삭제 선택창")
-                                        .setMessage("하기 해당 화물에 대한 삭제를 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+"\n"+location)
+                                dialog_Delete.setTitle("자료변경 선택창")
+                                        .setMessage("하기 해당 화물에 대한 자료변경을 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+
+                                                "\n"+location)
                                         .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -179,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
                                             }
                                         })
+
                                         .create()
                                 .show();
 
@@ -191,11 +217,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Toast.makeText(MainActivity.this, "취소 하였습니다.", Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .setNeutralButton("Take Picture", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("화물조회", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent=new Intent(MainActivity.this,CameraCapture.class);
+                                Intent intent=new Intent(MainActivity.this,WebList.class);
+                                String data_bl=textView_bl.getText().toString();
+                                intent.putExtra("bl",data_bl);
                                 startActivity(intent);
+
 
                             }
                         })
@@ -211,27 +240,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String str_des=intent.getStringExtra("des");
         String str_date=intent.getStringExtra("date");
         String str_count=intent.getStringExtra("count");
+        String str_remark=intent.getStringExtra("remark");
         if(str_location !=null){
             textView_bl.setText(str_bl);
             textView_des.setText(str_des);
             textView_loc.setText(str_location);
             textView_date.setText(str_date);
             textView_count.setText(str_count);
+            editText_remark.setText(str_remark);
         }
         getFirebaseDatabase();
+
         }
 
 
         public void getFirebaseDatabase(){
 
             ValueEventListener postListener=new ValueEventListener(){
+
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     listItems.clear();
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         List data=dataSnapshot.getValue(List.class);
                         listItems.add(data);
+
                     }
+                    Collections.reverse(listItems);
                     adapter.notifyDataSetChanged();
                 }
 
@@ -243,21 +278,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             };
 
             Query sortbyAge=databaseReference.orderByChild(sort);
+
             sortbyAge.addListenerForSingleValueEvent(postListener);
 
         }
 
 
-    public void locationSelect(String location){
+    public void locationSelect(){
         Intent intent=new Intent(MainActivity.this,Location.class);
         String data_bl=textView_bl.getText().toString();
         String data_description=textView_des.getText().toString();
         String data_date=textView_date.getText().toString();
         String data_count=textView_count.getText().toString();
+        String data_remark=editText_remark.getText().toString();
         intent.putExtra("bl",data_bl);
         intent.putExtra("des",data_description);
         intent.putExtra("date",data_date);
         intent.putExtra("count",data_count);
+        intent.putExtra("remark",data_remark);
         startActivity(intent);
     }
     public void postFirebaseDatabase(boolean add){
@@ -265,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
         if(add){
-            List list=new List(bl,description,location,date,count);
+            List list=new List(bl,description,location,date,count,remark);
             postValues=list.toMap();
              }
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
@@ -291,27 +329,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 location=textView_loc.getText().toString();
                 date=textView_date.getText().toString();
                 count=textView_count.getText().toString();
-//                Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
+                remark=editText_remark.getText().toString();
+                if(bl.equals("") || description.equals("") || location .equals("")|| date.equals("") ||count.equals("")){
+                    Toast.makeText(this, "등록 항목누락! 목록 다시한번 확인 바랍니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 postFirebaseDatabase(true);
                 getFirebaseDatabase();
                 break;
 
-            case R.id.btn_date:
+            case R.id.textView_date:
                DialogFragment newFragment=new DatePickerFragment();
                newFragment.show(getSupportFragmentManager(),"datePicker");
                 break;
 
-            case R.id.btn_dataDelete:
-                String location="a";
-                locationSelect(location);
+            case R.id.btn_location:
+
+                locationSelect();
 
                 break;
 
-            case R.id.btn_web:
-                Intent intent=new Intent(MainActivity.this,WebList.class);
-                String data_bl=textView_bl.getText().toString();
-                intent.putExtra("bl",data_bl);
+            case R.id.btn_camera:
+                Intent intent=new Intent(MainActivity.this,CameraCapture.class);
                 startActivity(intent);
+
         }
 
     }
@@ -335,4 +377,102 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inflater.inflate(R.menu.main_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    public void longClickItem(){
+        bl=textView_bl.getText().toString();
+        description=textView_des.getText().toString();
+        location=textView_loc.getText().toString();
+
+        if(bl.equals("")){
+            Toast.makeText(this, "항목선택 바랍니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final java.util.List<String> listItems = new ArrayList<>();
+
+        listItems.add("수입화물 진행정보조회");
+        listItems.add("해당항목 자료삭제");
+        CharSequence[] items_add=listItems.toArray(new String[listItems.size()]);
+        final EditText editText_remark=new EditText(this);
+        final java.util.List SelectedItems=new ArrayList();
+        int defaultItem=0;
+        SelectedItems.add(defaultItem);
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("하단 비엘 항목 조작 선텍");
+                builder.setView(editText_remark);
+                builder.setSingleChoiceItems(items_add,defaultItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SelectedItems.clear();
+                        SelectedItems.add(which);
+                        selectedItemsText=items_add[which].toString();
+                        Toast.makeText(MainActivity.this, selectedItemsText, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                builder.setPositiveButton("비고란 등록", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        remark=editText_remark.getText().toString();
+                        Toast.makeText(MainActivity.this, remark, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(MainActivity.this, "진행이 취소 되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder.setNeutralButton("항목선택", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch(selectedItemsText){
+                            case "비고란 자료추가":
+                                Toast.makeText(MainActivity.this, "take Picture", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "해당항목 자료삭제":
+                                AlertDialog.Builder dialog_Delete=new AlertDialog.Builder(MainActivity.this);
+                                dialog_Delete.setTitle("자료삭제선택창")
+                                        .setMessage("하기 해당 화물에 대한 자료변경을 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+
+                                                "\n"+location)
+                                        .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                postFirebaseDatabase(false);
+                                                getFirebaseDatabase();
+                                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        })
+                                .setNegativeButton("삭제취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                                break;
+                            case "수입화물 진행정보조회":
+                                Intent intent=new Intent(MainActivity.this,WebList.class);
+                                String data_bl=textView_bl.getText().toString();
+                                intent.putExtra("bl",data_bl);
+                                startActivity(intent);
+                                break;
+                            case "기초자료 변경":
+
+                                DialogFragment newFragment=new DatePickerFragment();
+                                newFragment.show(getSupportFragmentManager(),"datePicker");
+                                break;
+                        }
+                        }
+
+
+                });
+                builder.show();
+
+    }
+
+
 }

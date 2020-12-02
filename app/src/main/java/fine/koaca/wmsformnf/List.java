@@ -12,18 +12,28 @@ public class List {
     String location;
     String date;
     String count;
+    String remark;
 
     public List(){
 
 
     }
 
-    public List(String bl, String description,String location,String date,String count) {
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public List(String bl, String description, String location, String date, String count, String remark) {
         this.bl = bl;
         this.description = description;
-        this.location=location;
-        this.date=date;
-        this.count=count;
+        this.location = location;
+        this.date = date;
+        this.count = count;
+        this.remark = remark;
     }
 
     public String getCount() {
@@ -75,6 +85,7 @@ public class List {
         result.put("location",location);
         result.put("date",date);
         result.put("count",count);
+        result.put("remark",remark);
         return result;
     }
 }

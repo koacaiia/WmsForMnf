@@ -58,6 +58,7 @@ public class Location extends AppCompatActivity {
         intent_des=intent.getStringExtra("des");
         intent_date=intent.getStringExtra("date");
         intent_count=intent.getStringExtra("count");
+        String intent_remark=intent.getStringExtra("remaek");
 
 
         LayoutInflater inflater=getLayoutInflater();
@@ -185,6 +186,7 @@ public class Location extends AppCompatActivity {
                 intent.putExtra("des",intent_des);
                 intent.putExtra("date",intent_date);
                 intent.putExtra("count",intent_count);
+                intent.putExtra("remaek",intent_remark);
                 startActivity(intent);
 
                 return true;
