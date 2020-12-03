@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -284,8 +285,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-    public void locationSelect(){
-        Intent intent=new Intent(MainActivity.this,Location.class);
+    public void intentSelect(String className){
+        Intent intent=new Intent();
+        switch(className){
+            case "Location":
+
+        intent=new Intent(MainActivity.this,Location.class);
+                break;
+            case "CameraCapture":
+        intent=new Intent(MainActivity.this,CameraCapture.class);
+        break;}
         String data_bl=textView_bl.getText().toString();
         String data_description=textView_des.getText().toString();
         String data_date=textView_date.getText().toString();
@@ -297,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("count",data_count);
         intent.putExtra("remark",data_remark);
         startActivity(intent);
+
     }
     public void postFirebaseDatabase(boolean add){
 
@@ -321,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
+        String intentActivityName;
         switch(v.getId()){
             case R.id.btn_databaseReg:
 
@@ -345,14 +356,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_location:
-
-                locationSelect();
-
+                intentActivityName="Location";
+                intentSelect(intentActivityName);
                 break;
 
             case R.id.btn_camera:
-                Intent intent=new Intent(MainActivity.this,CameraCapture.class);
-                startActivity(intent);
+
+                intentActivityName="CameraCapture";
+                intentSelect(intentActivityName);
+                break;
 
         }
 
