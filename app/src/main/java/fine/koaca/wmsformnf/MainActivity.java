@@ -141,8 +141,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_datalocation.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                String intentActivityName="Incargo";
+                intentSelect(intentActivityName);
 
-                longClickItem();
+//                longClickItem();
                 return true;
             }
         });
@@ -323,6 +325,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case "Location":
 
         intent=new Intent(MainActivity.this,Location.class);
+                break;
+            case "Incargo":
+                intent=new Intent(MainActivity.this,Incargo.class);
                 break;
             case "CameraCapture":
         intent=new Intent(MainActivity.this,CameraCapture.class);
