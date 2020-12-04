@@ -13,6 +13,36 @@ public class List {
     String date;
     String count;
     String remark;
+    String container;
+    String incargo;
+
+    public List(String bl, String description, String location, String date, String count, String remark, String container,
+                String incargo) {
+        this.bl = bl;
+        this.description = description;
+        this.location = location;
+        this.date = date;
+        this.count = count;
+        this.remark = remark;
+        this.container = container;
+        this.incargo = incargo;
+    }
+
+    public String getIncargo() {
+        return incargo;
+    }
+
+    public void setIncargo(String incargo) {
+        this.incargo = incargo;
+    }
+
+    public String getContainer() {
+        return container;
+    }
+
+    public void setContainer(String container) {
+        this.container = container;
+    }
 
     public List(){
 
@@ -27,14 +57,7 @@ public class List {
         this.remark = remark;
     }
 
-    public List(String bl, String description, String location, String date, String count, String remark) {
-        this.bl = bl;
-        this.description = description;
-        this.location = location;
-        this.date = date;
-        this.count = count;
-        this.remark = remark;
-    }
+
 
     public String getCount() {
         return count;
@@ -86,6 +109,8 @@ public class List {
         result.put("date",date);
         result.put("count",count);
         result.put("remark",remark);
+        result.put("container",container);
+        result.put("incargo",incargo);
         return result;
     }
 }

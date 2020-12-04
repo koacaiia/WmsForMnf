@@ -43,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText editText_remark;
     TextView textView_date;
     EditText textView_count;
+    TextView textView_container;
+    EditText editText_incargo;
+
+    EditText editText_delete;
+
 
     String ID;
     String bl;
@@ -50,14 +55,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String location;
     String date;
     String count;
+    String container;
     String dataMessage;
     String selectedItemsText;
     String remark;
+    String incargo;
 
     Button btn_databaseReg;
     Button btn_datalocation;
     Button btn_camera;
     String sort="date";
+
 
 
     @Override
@@ -120,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editText_remark.setText(remark);
             }
         });
+        textView_container=findViewById(R.id.textView_container_activity);
+        editText_incargo=findViewById(R.id.editText_incargo);
 
 
 
@@ -148,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter=new ListAdapter(listItems,this);
 
         recyclerView.setAdapter(adapter);
+        editText_delete=new EditText(this);
 
 
 
@@ -160,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String date=listItems.get(position).getDate();
                 String count=listItems.get(position).getCount();
                 String remark=listItems.get(position).getRemark();
+                String container=listItems.get(position).getContainer();
+                String incargo=listItems.get(position).getIncargo();
 
                 textView_bl.setText(bl);
                 textView_des.setText(des);
@@ -167,35 +180,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 textView_loc.setText(loc);
                 textView_count.setText(count);
                 editText_remark.setText(remark);
+                textView_container.setText(container);
+                editText_incargo.setText(incargo);
 
 
             }
         });
         adapter.setLongClickListener(new OnItemLongClickListener() {
+
             @Override
             public void onLongItemClick(ListAdapter.ListViewHolder listViewHolder, View v, int pos) {
                 bl=textView_bl.getText().toString();
                 description=textView_des.getText().toString();
                 location=textView_loc.getText().toString();
 
+
+
+
                 AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("데이터 삭제,화물조회 ")
+
                         .setMessage("해당 BL 화물에 대한 자료 삭제,조회"+"\n"+bl+"\n" +
                                 description+"\n"+location)
+
                         .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 AlertDialog.Builder dialog_Delete=new AlertDialog.Builder(MainActivity.this);
-                                dialog_Delete.setTitle("자료변경 선택창")
+                                dialog_Delete.setTitle("자료삭제 선택창")
                                         .setMessage("하기 해당 화물에 대한 자료변경을 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+
                                                 "\n"+location)
+                                        .setView(editText_delete)
                                         .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                String str_delete=editText_delete.getText().toString();
+                                                if(str_delete.equals("02010027")){
                                                 postFirebaseDatabase(false);
                                                 getFirebaseDatabase();
-                                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();}
+                                                else{
+                                                    Toast.makeText(MainActivity.this, "삭제 권한이 없습니다.", Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
 
                                             }
                                         })
@@ -242,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String str_date=intent.getStringExtra("date");
         String str_count=intent.getStringExtra("count");
         String str_remark=intent.getStringExtra("remark");
+        String str_container=intent.getStringExtra("container");
+        String str_incargo=intent.getStringExtra("incargo");
         if(str_location !=null){
             textView_bl.setText(str_bl);
             textView_des.setText(str_des);
@@ -249,6 +279,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             textView_date.setText(str_date);
             textView_count.setText(str_count);
             editText_remark.setText(str_remark);
+            textView_container.setText(str_container);
+            editText_incargo.setText(str_incargo);
         }
         getFirebaseDatabase();
 
@@ -300,11 +332,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String data_date=textView_date.getText().toString();
         String data_count=textView_count.getText().toString();
         String data_remark=editText_remark.getText().toString();
+        String data_container=textView_container.getText().toString();
+        String data_incargo=editText_incargo.getText().toString();
+
         intent.putExtra("bl",data_bl);
         intent.putExtra("des",data_description);
         intent.putExtra("date",data_date);
         intent.putExtra("count",data_count);
         intent.putExtra("remark",data_remark);
+        intent.putExtra("container",data_container);
+        intent.putExtra("incargo",data_incargo);
         startActivity(intent);
 
     }
@@ -313,20 +350,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
         if(add){
-            List list=new List(bl,description,location,date,count,remark);
+            List list=new List(bl,description,location,date,count,remark,container,incargo);
             postValues=list.toMap();
              }
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
         databaseReference.updateChildren(childUpdates);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-            super.onSaveInstanceState(outState);
-            String data=textView_bl
-                    .getText().toString();
-            outState.putString("data",data);
-    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -341,6 +371,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 date=textView_date.getText().toString();
                 count=textView_count.getText().toString();
                 remark=editText_remark.getText().toString();
+                container=textView_container.getText().toString();
+                incargo=editText_incargo.getText().toString();
                 if(bl.equals("") || description.equals("") || location .equals("")|| date.equals("") ||count.equals("")){
                     Toast.makeText(this, "등록 항목누락! 목록 다시한번 확인 바랍니다.", Toast.LENGTH_SHORT).show();
                     return;

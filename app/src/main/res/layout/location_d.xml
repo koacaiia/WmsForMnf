@@ -32,7 +32,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="D4"
+                android:text="비보세_D4"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -44,7 +44,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="D3"
+                android:text="비보세_D3"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -55,7 +55,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="D2"
+                android:text="비보세_D2"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -66,7 +66,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="D1"
+                android:text="비보세_D1"
                 android:textStyle="bold|italic" />
         </LinearLayout>
 
@@ -86,7 +86,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="C4"
+                android:text="비보세_C4"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -98,7 +98,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="C3"
+                android:text="비보세_C3"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -109,7 +109,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="C2"
+                android:text="비보세_C2"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -120,7 +120,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="C1"
+                android:text="비보세_C1"
                 android:textStyle="bold|italic" />
         </LinearLayout>
 
@@ -140,7 +140,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="B4"
+                android:text="비보세_B4"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -152,7 +152,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="B3"
+                android:text="비보세_B3"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -163,7 +163,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="B2"
+                android:text="비보세_B2"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -174,7 +174,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="B1"
+                android:text="비보세_B1"
                 android:textStyle="bold|italic" />
         </LinearLayout>
 
@@ -194,7 +194,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="A4"
+                android:text="비보세_A4"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -205,7 +205,7 @@
                 android:background="@drawable/border"
                 android:backgroundTint="#78BBF1"
                 android:buttonTint="#FF0000"
-                android:text="A3"
+                android:text="비보세_A3"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -215,7 +215,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="A2"
+                android:text="비보세_A2"
                 android:textStyle="bold|italic" />
 
             <CheckBox
@@ -225,7 +225,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border"
                 android:buttonTint="#FF0000"
-                android:text="A1"
+                android:text="비보세_A1"
                 android:textStyle="bold|italic" />
 
         </LinearLayout>

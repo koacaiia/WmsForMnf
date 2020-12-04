@@ -44,6 +44,9 @@ public class Location extends AppCompatActivity {
     String intent_des;
     String intent_date;
     String intent_count;
+    String intent_remark;
+    String intent_container;
+    String intent_incargo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +61,9 @@ public class Location extends AppCompatActivity {
         intent_des=intent.getStringExtra("des");
         intent_date=intent.getStringExtra("date");
         intent_count=intent.getStringExtra("count");
-        String intent_remark=intent.getStringExtra("remaek");
-
+        intent_remark=intent.getStringExtra("remaek");
+        intent_container=intent.getStringExtra("container");
+        intent_incargo=intent.getStringExtra("incargo");
 
         LayoutInflater inflater=getLayoutInflater();
         View v_locationA=inflater.inflate(R.layout.location_a,null);
@@ -186,7 +190,9 @@ public class Location extends AppCompatActivity {
                 intent.putExtra("des",intent_des);
                 intent.putExtra("date",intent_date);
                 intent.putExtra("count",intent_count);
-                intent.putExtra("remaek",intent_remark);
+                intent.putExtra("remark",intent_remark);
+                intent.putExtra("container",intent_container);
+                intent.putExtra("incargo",intent_incargo);
                 startActivity(intent);
 
                 return true;

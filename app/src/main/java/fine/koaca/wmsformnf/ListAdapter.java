@@ -36,6 +36,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
 
         String location_chk=list.get(position).getLocation();
+        String str_incargo=String.valueOf(list.get(position).getIncargo());
 
         holder.bl.setText(list.get(position).getBl());
         holder.description.setText(list.get(position).getDescription());
@@ -43,6 +44,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.date.setText(list.get(position).getDate());
         holder.count.setText(list.get(position).getCount());
         holder.remark.setText(list.get(position).getRemark());
+        holder.container.setText(list.get(position).getContainer());
+        holder.incargo.setText(str_incargo);
 
 
 
@@ -91,6 +94,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         TextView date;
         TextView count;
         TextView remark;
+        TextView container;
+        TextView incargo;
 
 
         public  ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,final OnItemLongClickListener longClickListener) {
@@ -101,6 +106,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             this.date=itemView.findViewById(R.id.text_Date);
             this.count=itemView.findViewById(R.id.textView_Rotate);
             this.remark=itemView.findViewById(R.id.textView_list_mark);
+            this.container=itemView.findViewById(R.id.textView_container);
+            this.incargo=itemView.findViewById(R.id.textView_incargo);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -114,11 +121,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
                         bl.setTextColor(RED);
                         description.setTextColor(RED);
                         count.setTextColor(RED);
+                        container.setTextColor(RED);
                     }else{
                         mSelectedItems.put(pos,true);
                         bl.setTextColor(BLACK);
                         description.setTextColor(BLACK);
                         count.setTextColor(BLACK);
+                        container.setTextColor(BLACK);
                     }
 
                 }

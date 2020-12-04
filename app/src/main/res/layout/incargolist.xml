@@ -25,39 +25,20 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1">
-
-                                <TextView
-                                    android:id="@+id/textView2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:hint="BL"
-
-                                    android:textSize="12sp"
-                                    android:textStyle="bold|italic" />
-
-                                <TextView
-                                    android:id="@+id/textView"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:hint="품명"
-
-                                    android:textSize="12sp"
-                                    android:textStyle="bold|italic" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:orientation="horizontal">
+                                <TextView
+                                    android:id="@+id/incargo_working"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1.1"
+                                    android:gravity="center"
+                                    android:hint="작업상황"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold|italic" />
 
                                 <TextView
-                                    android:id="@+id/text_Date"
+                                    android:id="@+id/incargo_date"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
@@ -65,25 +46,25 @@
                                     android:hint="반입일"
                                     android:textSize="12sp"
                                     android:textStyle="bold|italic" />
-
                                 <TextView
-                                    android:id="@+id/textView_Rotate"
+                                    android:id="@+id/incargo_consignee"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
                                     android:gravity="center"
-                                    android:hint="찻수"
-                                    android:textSize="12sp" />
+                                    android:hint="화주명"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold|italic" />
 
                                 <TextView
-                                    android:id="@+id/text_location"
+                                    android:id="@+id/incargo_container"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="bottom"
                                     android:layout_marginTop="5dp"
                                     android:layout_weight="1"
                                     android:gravity="center"
-                                    android:hint="Location"
+                                    android:hint="컨테이너번호"
                                     android:textSize="12sp"
                                     android:textStyle="bold|italic" />
                         </LinearLayout>
@@ -95,22 +76,31 @@
                             android:orientation="horizontal">
 
                                 <TextView
-                                    android:id="@+id/textView_container"
+                                    android:id="@+id/incargo_container40"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="2"
+                                    android:layout_weight="1"
                                     android:gravity="center"
-                                    android:hint="container"
+                                    android:hint="40FT"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold|italic" />
+                                <TextView
+                                    android:id="@+id/incargo_container20"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:hint="20FT"
                                     android:textSize="12sp"
                                     android:textStyle="bold|italic" />
 
                                 <TextView
-                                    android:id="@+id/textView_incargo"
+                                    android:id="@+id/incargo_lclcargo"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="2.3"
+                                    android:layout_weight="1"
                                     android:gravity="center"
-                                    android:hint="수량"
+                                    android:hint="LCLcargo"
                                     android:textStyle="bold|italic"
                                     android:textSize="12sp" />
 
@@ -118,7 +108,7 @@
                                     android:id="@+id/textView_list_mark"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="1"
+                                    android:layout_weight="0.5"
                                     android:gravity="center"
                                     android:hint="비고란"
                                     android:textColor="#FF0000"
