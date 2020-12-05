@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         database=FirebaseDatabase.getInstance();
-        databaseReference=database.getReference("MnF");
+        databaseReference=database.getReference("Incargo");
 
         adapter=new ListAdapter(listItems,this);
 
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             };
 
-            Query sortbyAge=databaseReference.orderByChild(sort);
+            Query sortbyAge=databaseReference.orderByChild("consignee").equalTo("코만");
 
             sortbyAge.addListenerForSingleValueEvent(postListener);
 

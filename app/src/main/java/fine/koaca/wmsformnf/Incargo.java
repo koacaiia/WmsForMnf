@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +40,10 @@ public class Incargo extends AppCompatActivity {
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
+        getFirebaseIncargoDatabase();
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
-        getFirebaseIncargoDatabase();
+
 
     }
     public void getFirebaseIncargoDatabase(){
@@ -53,7 +55,8 @@ public class Incargo extends AppCompatActivity {
                     ListIncargo data=dataSnapshot.getValue(ListIncargo.class);
                     listItems.add(data);
                 }
-                Collections.reverse(listItems);
+//                Collections.reverse(listItems);
+                listItems.sort(new IncargoListComparator().reversed());
                 adapter.notifyDataSetChanged();
 
             }
@@ -65,7 +68,10 @@ public class Incargo extends AppCompatActivity {
             }
 
         };
-        Query sortbyDate=databaseReference.orderByChild(sort);
+        Query sortbyDate=databaseReference.orderByChild("consignee").equalTo("코만");
+
+//     sortbyDate.orderByChild("consignee").equalTo("코만");
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
+
     }
 }

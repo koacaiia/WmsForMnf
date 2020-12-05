@@ -14,6 +14,10 @@ public class ListIncargo {
     String container20;
     String lclcargo;
     String remark;
+
+    public ListIncargo(String date){
+        this.date=date;
+    }
     public ListIncargo(){
 
     }
