@@ -1,6 +1,8 @@
 package fine.koaca.wmsformnf;
 
+import android.graphics.Color;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.RED;
+
 public class Fine2IncargoListAdapter extends RecyclerView.Adapter<Fine2IncargoListAdapter.ListViewHolder> implements    OnListItemClickListener,OnItemLongClickListener{
 
     ArrayList<Fine2IncargoList> fine2IncargoLists;
     OnListItemClickListener listener;
     OnItemLongClickListener longClickListener;
 
+    private SparseBooleanArray mSelectedItems=new SparseBooleanArray(0);
 
     public Fine2IncargoListAdapter(ArrayList<Fine2IncargoList> fine2IncargoLists, MainActivity mainActivity) {
         this.fine2IncargoLists = fine2IncargoLists;
@@ -32,10 +38,10 @@ public class Fine2IncargoListAdapter extends RecyclerView.Adapter<Fine2IncargoLi
 
     @Override
     public void onBindViewHolder(@NonNull Fine2IncargoListAdapter.ListViewHolder holder, int position) {
-//        String str_incargo=String.valueOf(fine2IncargoLists.get(position).getIncargo());
-        String str_incargo=String.valueOf(fine2IncargoLists.get(position).getIncargo());
+          String str_incargo=String.valueOf(fine2IncargoLists.get(position).getIncargo());
+          String location_chk=fine2IncargoLists.get(position).getLocation();
 
-Log.i("koaca",str_incargo);
+
 
 //        holder.working.setText(fine2IncargoLists.get(position).getWorking());
 //        holder.consignee.setText(fine2IncargoLists.get(position).getConsignee());
@@ -51,6 +57,12 @@ Log.i("koaca",str_incargo);
             holder.count_seal.setText(fine2IncargoLists.get(position).getCount());
             holder.location.setText(fine2IncargoLists.get(position).getLocation());
             holder.container.setText(fine2IncargoLists.get(position).getContainer());
+
+        if(location_chk.equals("")){
+            holder.itemView.setBackgroundColor(Color.BLUE);
+        }else{
+            holder.itemView.setBackgroundColor(Color.WHITE);
+        }
 
 
     }
@@ -119,19 +131,19 @@ Log.i("koaca",str_incargo);
                     if(listener !=null){
                         listener.onItemClick(ListViewHolder.this,v,pos);
                     }
-//                    if(mSelectedItems.get(pos,true)){
-//                        mSelectedItems.put(pos,false);
-//                        bl.setTextColor(RED);
-//                        description.setTextColor(RED);
-//                        count.setTextColor(RED);
-//                        container.setTextColor(RED);
-//                    }else{
-//                        mSelectedItems.put(pos,true);
-//                        bl.setTextColor(BLACK);
-//                        description.setTextColor(BLACK);
-//                        count.setTextColor(BLACK);
-//                        container.setTextColor(BLACK);
-//                    }
+                    if(mSelectedItems.get(pos,true)){
+                        mSelectedItems.put(pos,false);
+                        bl.setTextColor(RED);
+                        des.setTextColor(RED);
+                        count_seal.setTextColor(RED);
+                        container.setTextColor(RED);
+                    }else{
+                        mSelectedItems.put(pos,true);
+                        bl.setTextColor(BLACK);
+                        des.setTextColor(BLACK);
+                        count_seal.setTextColor(BLACK);
+                        container.setTextColor(BLACK);
+                    }
 
                 }
             });

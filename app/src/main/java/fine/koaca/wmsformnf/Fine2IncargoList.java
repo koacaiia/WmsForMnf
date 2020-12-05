@@ -23,11 +23,11 @@ public class Fine2IncargoList {
 
     }
 
-    public Fine2IncargoList(String bl, String des, String date, String count_seal, String container, String incargo,
+    public Fine2IncargoList(String bl, String description, String date, String count_seal, String container, String incargo,
                             String remark, String container40, String container20, String lclCargo, String working,
                             String location,String consignee) {
         this.bl = bl;
-        this.description = des;
+        this.description = description;
         this.date = date;
         this.count = count_seal;
         this.container = container;
@@ -41,8 +41,7 @@ public class Fine2IncargoList {
         this.consignee=consignee;
     }
 
-    public Fine2IncargoList(String bl, String description, String location, String date, String count, String remark, String container, String incargo) {
-    }
+
 
     public String getIncargo() {
         return incargo;

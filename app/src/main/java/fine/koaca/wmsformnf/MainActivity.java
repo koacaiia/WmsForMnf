@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String selectedItemsText;
     String remark;
     String incargo;
+    String container40;
+    String container20;
+    String consignee;
+    String working;
+    String lclCargo;
 
     Button btn_databaseReg;
     Button btn_datalocation;
@@ -178,6 +183,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String remark=listItems.get(position).getRemark();
                 String container=listItems.get(position).getContainer();
                 String incargo=listItems.get(position).getIncargo();
+                working=listItems.get(position).getWorking();
+                container40=listItems.get(position).getContainer40();
+                container20=listItems.get(position).getContainer20();
+                consignee=listItems.get(position).getConsignee();
+                lclCargo=listItems.get(position).getLclcargo();
+
 
                 textView_bl.setText(bl);
                 textView_des.setText(des);
@@ -360,7 +371,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
         if(add){
-            Fine2IncargoList list=new Fine2IncargoList(bl,description,location,date,count,remark,container,incargo);
+            Fine2IncargoList list=new Fine2IncargoList(bl,description,date,count,container,incargo,remark,container40,container20,
+                    lclCargo,working,
+                    location,consignee);
             postValues=list.toMap();
              }
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
