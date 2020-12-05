@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class Incargo extends AppCompatActivity {
-    ArrayList<ListIncargo> listItems;
+    ArrayList<Fine2IncargoList> listItems;
     IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -52,11 +52,11 @@ public class Incargo extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    ListIncargo data=dataSnapshot.getValue(ListIncargo.class);
+                    Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
                     listItems.add(data);
                 }
-//                Collections.reverse(listItems);
-                listItems.sort(new IncargoListComparator().reversed());
+                Collections.reverse(listItems);
+//                listItems.sort(new IncargoListComparator().reversed());
                 adapter.notifyDataSetChanged();
 
             }
@@ -68,7 +68,7 @@ public class Incargo extends AppCompatActivity {
             }
 
         };
-        Query sortbyDate=databaseReference.orderByChild("consignee").equalTo("코만");
+        Query sortbyDate=databaseReference.orderByChild("date");
 
 //     sortbyDate.orderByChild("consignee").equalTo("코만");
         sortbyDate.addListenerForSingleValueEvent(incargoListener);

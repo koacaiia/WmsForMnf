@@ -4,10 +4,10 @@ import android.widget.Toast;
 
 import java.util.Comparator;
 
-public class IncargoListComparator implements Comparator<ListIncargo> {
+public class IncargoListComparator implements Comparator<Fine2IncargoList> {
 
     @Override
-    public int compare(ListIncargo a, ListIncargo b) {
+    public int compare(Fine2IncargoList a, Fine2IncargoList b) {
 //        if(Integer.parseInt(a.date)>Integer.parseInt(b.date)) return 1;
 //        if(Integer.parseInt(a.date)<Integer.parseInt(b.date)) return -1;
 

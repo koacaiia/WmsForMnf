@@ -4,7 +4,7 @@ import android.view.View;
 
 public interface OnItemLongClickListener {
 
-    void onLongItemClick(ListAdapter.ListViewHolder listViewHolder, View v, int pos);
+    void onLongItemClick(Fine2IncargoListAdapter.ListViewHolder listViewHolder, View v, int pos);
 
 
 }

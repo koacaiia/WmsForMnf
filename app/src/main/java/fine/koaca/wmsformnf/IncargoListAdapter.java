@@ -1,5 +1,6 @@
 package fine.koaca.wmsformnf;
 
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,12 @@ import java.util.ArrayList;
 
 public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.ListViewHolder> implements OnListItemClickListener,OnItemLongClickListener{
 
-    ArrayList<ListIncargo> list;
+    ArrayList<Fine2IncargoList> list;
     OnListItemClickListener listener;
     OnItemLongClickListener longClickListener;
     private SparseBooleanArray mSelectedItems=new SparseBooleanArray(0);
 
-    public IncargoListAdapter(ArrayList<ListIncargo> list, Incargo incargo) {
+    public IncargoListAdapter(ArrayList<Fine2IncargoList> list, Incargo incargo) {
         this.list = list;
     }
 
@@ -31,14 +32,29 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull IncargoListAdapter.ListViewHolder holder, int position) {
+        String str_container20=String.valueOf(list.get(position).getContainer20());
+        Log.i("kocaca",str_container20);
+        String str_container40=String.valueOf(list.get(position).getContainer40());
+        String str_lclcargo=String.valueOf(list.get(position).getLclcargo());
+        String cargotype;
+        if(str_container20.equals("1")){
+            cargotype="20FT";}
+        else if(str_container40 .equals("1")){
+            cargotype="40FT";
+        }else if(str_lclcargo .equals("")){
+            cargotype="LcLCargo";
+        }else{cargotype="미정";}
+
+
+
         holder.working.setText(list.get(position).getWorking());
         holder.date.setText(list.get(position).getDate());
         holder.consignee.setText(list.get(position).getConsignee());
         holder.container.setText(list.get(position).getContainer());
-        holder.container40.setText(list.get(position).getContainer40());
-        holder.container20.setText(list.get(position).getContainer20());
-        holder.lclcargo.setText(list.get(position).getLclcargo());
+        holder.cargotype.setText(cargotype);
         holder.remark.setText(list.get(position).getRemark());
+        holder.bl.setText(list.get(position).getBl());
+        holder.des.setText(list.get(position).getDescription());
 
     }
 
@@ -55,7 +71,7 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
     }
 
     @Override
-    public void onLongItemClick(ListAdapter.ListViewHolder listViewHolder, View v, int pos) {
+    public void onLongItemClick(Fine2IncargoListAdapter.ListViewHolder listViewHolder, View v, int pos) {
         if(longClickListener !=null){
             longClickListener.onLongItemClick(listViewHolder,v,pos);
         }
@@ -63,7 +79,7 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
     }
 
     @Override
-    public void onItemClick(ListAdapter.ListViewHolder holder, View view, int position) {
+    public void onItemClick(Fine2IncargoListAdapter.ListViewHolder holder, View view, int position) {
         if(listener !=null){
             listener.onItemClick(holder,view,position);
         }
@@ -76,10 +92,10 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
         TextView date;
         TextView container;
         TextView consignee;
-        TextView container40;
-        TextView container20;
-        TextView lclcargo;
+        TextView cargotype;
         TextView remark;
+        TextView bl;
+        TextView des;
         public ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,
                               final OnItemLongClickListener longClickListener) {
             super(itemView);
@@ -87,10 +103,10 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
             this.date=itemView.findViewById(R.id.incargo_date);
             this.consignee=itemView.findViewById(R.id.incargo_consignee);
             this.container=itemView.findViewById(R.id.incargo_container);
-            this.container40=itemView.findViewById(R.id.incargo_container40);
-            this.container20=itemView.findViewById(R.id.incargo_container20);
-            this.lclcargo=itemView.findViewById(R.id.incargo_lclcargo);
+            this.cargotype=itemView.findViewById(R.id.incargo_cargotype);
             this.remark=itemView.findViewById(R.id.incargo_remark);
+            this.bl=itemView.findViewById(R.id.incargo_bl);
+            this.des=itemView.findViewById(R.id.incargo_des);
         }
     }
 }

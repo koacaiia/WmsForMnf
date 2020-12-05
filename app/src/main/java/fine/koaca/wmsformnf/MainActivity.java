@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -33,8 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    ArrayList<List> listItems;
-    ListAdapter adapter;
+//    ArrayList<List> listItems;
+    ArrayList<Fine2IncargoList> listItems;
+//    ListAdapter adapter;
+    Fine2IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     EditText textView_bl;
@@ -157,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
 
-        adapter=new ListAdapter(listItems,this);
+        adapter=new Fine2IncargoListAdapter(listItems,this);
 
         recyclerView.setAdapter(adapter);
         editText_delete=new EditText(this);
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         adapter.setOnItemClicklistener(new OnListItemClickListener() {
             @Override
-            public void onItemClick(ListAdapter.ListViewHolder holder, View view, int position) {
+            public void onItemClick(Fine2IncargoListAdapter.ListViewHolder holder, View view, int position) {
                 String bl=listItems.get(position).getBl();
                 String des=listItems.get(position).getDescription();
                 String loc=listItems.get(position).getLocation();
@@ -184,14 +187,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editText_remark.setText(remark);
                 textView_container.setText(container);
                 editText_incargo.setText(incargo);
-
-
-            }
+                           }
         });
         adapter.setLongClickListener(new OnItemLongClickListener() {
 
             @Override
-            public void onLongItemClick(ListAdapter.ListViewHolder listViewHolder, View v, int pos) {
+            public void onLongItemClick(Fine2IncargoListAdapter.ListViewHolder listViewHolder, View v, int pos) {
                 bl=textView_bl.getText().toString();
                 description=textView_des.getText().toString();
                 location=textView_loc.getText().toString();
@@ -296,12 +297,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     listItems.clear();
+
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                        List data=dataSnapshot.getValue(List.class);
+                        Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
+
                         listItems.add(data);
 
                     }
-                    Collections.reverse(listItems);
+//                    Collections.reverse(listItems);
+
+                    listItems.sort(new IncargoListComparator().reversed());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -355,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
         if(add){
-            List list=new List(bl,description,location,date,count,remark,container,incargo);
+            Fine2IncargoList list=new Fine2IncargoList(bl,description,location,date,count,remark,container,incargo);
             postValues=list.toMap();
              }
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
