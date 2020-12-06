@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btn_camera;
     String sort="date";
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,13 +137,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_container=findViewById(R.id.textView_container_activity);
         editText_incargo=findViewById(R.id.editText_incargo);
 
-
-
         btn_databaseReg=findViewById(R.id.btn_databaseReg);
         btn_databaseReg.setOnClickListener(this);
 
         btn_datalocation=findViewById(R.id.btn_location);
-
         btn_datalocation.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -164,13 +159,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
-
         adapter=new Fine2IncargoListAdapter(listItems,this);
 
         recyclerView.setAdapter(adapter);
         editText_delete=new EditText(this);
-
-
 
         adapter.setOnItemClicklistener(new OnListItemClickListener() {
             @Override
@@ -201,15 +193,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                            }
         });
         adapter.setLongClickListener(new OnItemLongClickListener() {
-
             @Override
             public void onLongItemClick(Fine2IncargoListAdapter.ListViewHolder listViewHolder, View v, int pos) {
                 bl=textView_bl.getText().toString();
                 description=textView_des.getText().toString();
                 location=textView_loc.getText().toString();
-
-
-
 
                 AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("데이터 삭제,화물조회 ")
@@ -297,10 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editText_incargo.setText(str_incargo);
         }
         getFirebaseDatabase();
-
         }
-
-
         public void getFirebaseDatabase(){
 
             ValueEventListener postListener=new ValueEventListener(){
@@ -308,33 +293,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     listItems.clear();
-
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
-
                         listItems.add(data);
-
                     }
 //                    Collections.reverse(listItems);
 
-                    listItems.sort(new IncargoListComparator().reversed());
+                    listItems.sort(new IncargoListComparator(sort).reversed());
                     adapter.notifyDataSetChanged();
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(MainActivity.this, "Data Server connection Error", Toast.LENGTH_SHORT).show();
-
                 }
             };
-
             Query sortbyAge=databaseReference.orderByChild("consignee").equalTo("코만");
-
             sortbyAge.addListenerForSingleValueEvent(postListener);
-
         }
-
-
     public void intentSelect(String className){
         Intent intent=new Intent();
         switch(className){
@@ -364,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("container",data_container);
         intent.putExtra("incargo",data_incargo);
         startActivity(intent);
-
     }
     public void postFirebaseDatabase(boolean add){
 
@@ -374,13 +348,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Fine2IncargoList list=new Fine2IncargoList(bl,description,date,count,container,incargo,remark,container40,container20,
                     lclCargo,working,
                     location,consignee);
-            postValues=list.toMap();
-             }
+            postValues=list.toMap(); }
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
-        databaseReference.updateChildren(childUpdates);
-    }
-
-
+        databaseReference.updateChildren(childUpdates); }
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
@@ -400,51 +370,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "등록 항목누락! 목록 다시한번 확인 바랍니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 postFirebaseDatabase(true);
                 getFirebaseDatabase();
                 break;
-
             case R.id.textView_date:
                DialogFragment newFragment=new DatePickerFragment();
                newFragment.show(getSupportFragmentManager(),"datePicker");
                 break;
-
             case R.id.btn_location:
                 intentActivityName="Location";
                 intentSelect(intentActivityName);
                 break;
-
             case R.id.btn_camera:
-
                 intentActivityName="CameraCapture";
                 intentSelect(intentActivityName);
                 break;
-
         }
-
     }
-
-
     public void processDatePickerResult(int year, int month, int dayOfMonth) {
         String month_string=Integer.toString(month+1);
         String day_string=Integer.toString(dayOfMonth);
         String year_string=Integer.toString(year);
-
         dataMessage=(year_string+"/"+month_string+"/"+day_string);
         textView_date.setText(dataMessage);
-
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.main_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
-
     public void longClickItem(){
         bl=textView_bl.getText().toString();
         description=textView_des.getText().toString();

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Fine2IncargoList {
+
     String bl;
     String description;
     String date;

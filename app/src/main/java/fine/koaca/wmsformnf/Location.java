@@ -48,6 +48,11 @@ public class Location extends AppCompatActivity {
     String intent_container;
     String intent_incargo;
 
+    TextView location_bl;
+    TextView location_count;
+    TextView location_description;
+    TextView location_itemcount;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,7 @@ public class Location extends AppCompatActivity {
 
         viewPager=findViewById(R.id.pager_location);
         textView_location=findViewById(R.id.txt_location);
+
 
         Intent intent=getIntent();
         intent_bl=intent.getStringExtra("bl");
@@ -64,6 +70,15 @@ public class Location extends AppCompatActivity {
         intent_remark=intent.getStringExtra("remaek");
         intent_container=intent.getStringExtra("container");
         intent_incargo=intent.getStringExtra("incargo");
+
+        location_bl=findViewById(R.id.location_bl);
+        location_bl.setText(intent_bl);
+        location_count=findViewById(R.id.location_count);
+        location_count.setText(intent_count);
+        location_description=findViewById(R.id.location_description);
+        location_description.setText(intent_des);
+        location_itemcount=findViewById(R.id.location_itemcount);
+        location_itemcount.setText(intent_incargo);
 
         LayoutInflater inflater=getLayoutInflater();
         View v_locationA=inflater.inflate(R.layout.location_a,null);
