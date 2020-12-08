@@ -47,6 +47,11 @@ public class Location extends AppCompatActivity {
     String intent_remark;
     String intent_container;
     String intent_incargo;
+    String intent_container40;
+    String intent_container20;
+    String intent_consignee;
+    String intent_working;
+    String intent_lclCargo;
 
     TextView location_bl;
     TextView location_count;
@@ -67,9 +72,14 @@ public class Location extends AppCompatActivity {
         intent_des=intent.getStringExtra("des");
         intent_date=intent.getStringExtra("date");
         intent_count=intent.getStringExtra("count");
-        intent_remark=intent.getStringExtra("remaek");
+        intent_remark=intent.getStringExtra("remark");
         intent_container=intent.getStringExtra("container");
         intent_incargo=intent.getStringExtra("incargo");
+        intent_container40=intent.getStringExtra("container40");
+        intent_container20=intent.getStringExtra("container20");
+        intent_consignee=intent.getStringExtra("consignee");
+        intent_working=intent.getStringExtra("working");
+        intent_lclCargo=intent.getStringExtra("lclCargo");
 
         location_bl=findViewById(R.id.location_bl);
         location_bl.setText(intent_bl);
@@ -208,6 +218,11 @@ public class Location extends AppCompatActivity {
                 intent.putExtra("remark",intent_remark);
                 intent.putExtra("container",intent_container);
                 intent.putExtra("incargo",intent_incargo);
+                intent.putExtra("container40",intent_container40);
+                intent.putExtra("container20",intent_container20);
+                        intent.putExtra("consignee", intent_consignee);
+                                intent.putExtra("working", intent_working);
+                                        intent.putExtra("lclCargo",intent_lclCargo);
                 startActivity(intent);
 
                 return true;

@@ -274,6 +274,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String str_remark=intent.getStringExtra("remark");
         String str_container=intent.getStringExtra("container");
         String str_incargo=intent.getStringExtra("incargo");
+        container40=intent.getStringExtra("container40");
+        container20=intent.getStringExtra("container20");
+        consignee=intent.getStringExtra("consignee");
+        working=intent.getStringExtra("working");
+        lclCargo=intent.getStringExtra("lclCargo");
         if(str_location !=null){
             textView_bl.setText(str_bl);
             textView_des.setText(str_des);
@@ -338,6 +343,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("remark",data_remark);
         intent.putExtra("container",data_container);
         intent.putExtra("incargo",data_incargo);
+        intent.putExtra("working",working);
+        intent.putExtra("container40",container40);
+        intent.putExtra("container20",container20);
+        intent.putExtra("lclCargo",lclCargo);
+        intent.putExtra("consignee",consignee);
         startActivity(intent);
     }
     public void postFirebaseDatabase(boolean add){
