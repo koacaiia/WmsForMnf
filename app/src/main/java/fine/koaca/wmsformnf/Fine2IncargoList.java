@@ -20,6 +20,7 @@ public class Fine2IncargoList {
     String working;
     String location;
     String consignee;
+
     public Fine2IncargoList(){
 
     }
@@ -171,4 +172,6 @@ public class Fine2IncargoList {
         result.put("consignee",consignee);
         return result;
     }
+
+
 }

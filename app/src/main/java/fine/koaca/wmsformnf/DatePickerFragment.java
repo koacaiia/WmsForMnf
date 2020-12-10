@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,11 @@ import java.util.Calendar;
 
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+String a;
 
+    public DatePickerFragment(String a) {
+        this.a=a;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -30,8 +35,13 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+       if(a.equals("a")){
         MainActivity activity=(MainActivity)getActivity();
-        activity.processDatePickerResult(year,month,dayOfMonth);
+        activity.processDatePickerResult(year,month,dayOfMonth);}
+       else{
+           Incargo incargo=(Incargo)getActivity();
+           incargo.processDatePickerResult(year,month,dayOfMonth);
+       }
 
 
     }

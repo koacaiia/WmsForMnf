@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btn_datalocation;
     Button btn_camera;
     String sort="date";
+    String a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -384,7 +385,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getFirebaseDatabase();
                 break;
             case R.id.textView_date:
-               DialogFragment newFragment=new DatePickerFragment();
+                a="a";
+               DialogFragment newFragment=new DatePickerFragment(a);
                newFragment.show(getSupportFragmentManager(),"datePicker");
                 break;
             case R.id.btn_location:
@@ -494,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 break;
                             case "기초자료 변경":
 
-                                DialogFragment newFragment=new DatePickerFragment();
+                                DialogFragment newFragment=new DatePickerFragment(a);
                                 newFragment.show(getSupportFragmentManager(),"datePicker");
                                 break;
                         }
