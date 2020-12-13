@@ -28,12 +28,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
 
 public class Incargo extends AppCompatActivity {
     ArrayList<Fine2IncargoList> listItems;
@@ -61,9 +57,10 @@ public class Incargo extends AppCompatActivity {
 
     String nowDated;
 
-
-
     Button btn_koaca;
+
+    Button btn_sort;
+    String str_sort="sort";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,15 +83,7 @@ public class Incargo extends AppCompatActivity {
         listConsignee=findViewById(R.id.incargo_spinner_listconsignee);
         text_listConsignee=findViewById(R.id.incargo_listconsignee);
 
-        date_End=findViewById(R.id.textView_dateEnd);
-        date_End.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                b="c";
-                DialogFragment newFragment=new DatePickerFragment(b);
-                newFragment.show(getSupportFragmentManager(),"datePicker");
-            }
-        });
+
         date_Start=findViewById(R.id.textView_dateStart);
         date_Start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +96,7 @@ public class Incargo extends AppCompatActivity {
 
         getFirebaseIncargoDatabase();
 
-        Button btn_sort=findViewById(R.id.btn_sort);
+        btn_sort=findViewById(R.id.btn_sort);
         btn_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +107,7 @@ public class Incargo extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 getFirebaseIncargoDatabase();
+                str_sort="long";
                 return true;
             }
         });
@@ -151,6 +141,7 @@ public class Incargo extends AppCompatActivity {
                 for(int i=0;i<listItems_count;i++){
                     String str_consignee=listItems.get(i).getConsignee();
                     Log.i("koaca",str_consignee);
+                    arrConsignee.add("All");
                     arrConsignee.add(str_consignee);
                 }
                 consignee_list=arrConsignee.toArray(new String[arrConsignee.size()]);
@@ -197,7 +188,14 @@ public class Incargo extends AppCompatActivity {
 //    nowDated=date_Start.getText().toString();
         String nowDated1 = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 //        String nowDated1=date_Start.getText().toString();
-        Query sortbyDate=databaseReference.orderByChild(sort).equalTo(nowDated1);
+
+        Query sortbyDate;
+        if(str_sort.equals("long")) {
+            sortbyDate = databaseReference.orderByChild(sort);
+
+        }else{
+            sortbyDate = databaseReference.orderByChild(sort).equalTo(nowDated1);
+        }
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
 
     }
@@ -217,26 +215,7 @@ public class Incargo extends AppCompatActivity {
 //                listItems.sort()
 
 
-//                listItems.sort(new IncargoListComparator(sort).reversed());
-////consignee_list2=arrConsignee.toArray(new String[arrConsignee.size()]);
-//                int listItems_size=listItems.size();
-////                String sort_date=date_Start.getText().toString();
-//                String sort_date="2020-12-08";
-//                Log.i("koaca_datesize",Integer.toString(listItems_size));
-//                Log.i("koaca_date",sort_date);
-//////
-//                for(int i=0;i<listItems_size;i++){
-//                    if( ! sort_date.equals(listItems.get(i).getDate())){
-//                        Log.i("koaca_delete"+i,listItems.get(i).getDate());
-//                        listItems.remove(i);
-//                    }
-//                    listItems_size--;
-//                    i--;
-//                }
-////
-////                Iterator iter = listItems.iterator();
-////                while(iter.hasNext()) {
-////                    if( ! sort_date.equals(iter.next())) { iter.remove(); } }
+//
 
 
                    adapter.notifyDataSetChanged();
@@ -267,10 +246,8 @@ if(text_listConsignee.getText().toString().equals("")){
 
 
 
-        Log.i("koacaDate",dataMessage);
 
 
-        Toast.makeText(this, dataMessage, Toast.LENGTH_SHORT).show();
 
     }
     public void processDatePickerResult(int year, int month, int dayOfMonth) {

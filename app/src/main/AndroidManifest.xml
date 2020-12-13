@@ -12,12 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WmsForMnf">
-        <activity android:name=".Incargo"></activity>
+        <activity android:name=".Incargo"
+            android:label="Incargo_List"/>
         <activity android:name=".CameraCapture" />
         <activity android:name=".WebList" />
         <activity android:name=".LocationA" />
-        <activity android:name=".Location" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Location"
+            android:label="Mnf_Location"/>
+        <activity android:name=".MainActivity"
+            android:label="엠엔에프 로케이션 관리">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
