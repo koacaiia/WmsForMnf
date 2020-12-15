@@ -3,10 +3,11 @@ package fine.koaca.wmsformnf;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class List {
+public class List implements Serializable {
     String bl;
     String description;
     String location;

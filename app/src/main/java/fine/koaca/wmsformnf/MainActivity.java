@@ -28,15 +28,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-//    ArrayList<List> listItems;
     ArrayList<Fine2IncargoList> listItems;
-//    ListAdapter adapter;
     Fine2IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     EditText editText_delete;
 
-
-    String ID;
     String bl;
     String description;
     String location;
@@ -75,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String sort="date";
     String a;
 
-    @Override
+       @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -148,15 +145,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String intentActivityName="Incargo";
                 intentSelect(intentActivityName);
 
-//                longClickItem();
                 return true;
             }
         });
         btn_datalocation.setOnClickListener(this);
         btn_camera=findViewById(R.id.btn_camera);
         btn_camera.setOnClickListener(this);
-
-
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
@@ -182,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 consignee=listItems.get(position).getConsignee();
                 lclCargo=listItems.get(position).getLclcargo();
 
-
                 textView_bl.setText(bl);
                 textView_des.setText(des);
                 textView_date.setText(date);
@@ -191,7 +184,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editText_remark.setText(remark);
                 textView_container.setText(container);
                 editText_incargo.setText(incargo);
+
                            }
+
         });
         adapter.setLongClickListener(new OnItemLongClickListener() {
             @Override
@@ -291,19 +286,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editText_incargo.setText(str_incargo);
         }
         getFirebaseDatabase();
+
         }
-        public void getFirebaseDatabase(){
+    public void getFirebaseDatabase(){
 
             ValueEventListener postListener=new ValueEventListener(){
-
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                     listItems.clear();
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
+
                         listItems.add(data);
+
                     }
-//                    Collections.reverse(listItems);
 
                     listItems.sort(new IncargoListComparator(sort).reversed());
                     adapter.notifyDataSetChanged();
@@ -315,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             };
             Query sortbyAge=databaseReference.orderByChild("consignee").equalTo("코만");
             sortbyAge.addListenerForSingleValueEvent(postListener);
+
         }
     public void intentSelect(String className){
         Intent intent=new Intent();
@@ -322,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case "Location":
 
         intent=new Intent(MainActivity.this,Location.class);
+
                 break;
             case "Incargo":
                 intent=new Intent(MainActivity.this,Incargo.class);
@@ -349,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("container20",container20);
         intent.putExtra("lclCargo",lclCargo);
         intent.putExtra("consignee",consignee);
+
         startActivity(intent);
     }
     public void postFirebaseDatabase(boolean add){
@@ -403,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String month_string=Integer.toString(month+1);
         String day_string=Integer.toString(dayOfMonth);
         String year_string=Integer.toString(year);
-        dataMessage=(year_string+"/"+month_string+"/"+day_string);
+        dataMessage=(year_string+"-"+month_string+"-"+day_string);
         textView_date.setText(dataMessage);
     }
     @Override

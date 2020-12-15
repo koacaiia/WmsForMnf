@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,9 +32,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-public class Incargo extends AppCompatActivity {
+public class Incargo extends AppCompatActivity implements Serializable {
     ArrayList<Fine2IncargoList> listItems;
-    ArrayList<Fine2IncargoList> sortArr;
+
     IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -61,12 +62,20 @@ public class Incargo extends AppCompatActivity {
 
     Button btn_sort;
     String str_sort="sort";
+
+    TextView incargo_40ft;
+    TextView incargo_20ft;
+    TextView incargo_lclcargo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incargo);
 
         dataMessage = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+
+        incargo_40ft=findViewById(R.id.incargo_40ft);
+        incargo_20ft=findViewById(R.id.incargo_20ft);
+        incargo_lclcargo=findViewById(R.id.incargo_lcl);
 
         recyclerView=findViewById(R.id.incargo_recyclerViewList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -121,8 +130,9 @@ public class Incargo extends AppCompatActivity {
 
         nowDated = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-       date_Start.setText(nowDated);
+        date_Start.setText(nowDated);
         Log.i("nowDated",nowDated);
+
 
     }
 
@@ -131,6 +141,9 @@ public class Incargo extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
+                ArrayList<Integer> list_40 = new ArrayList<Integer>();
+                ArrayList<Integer> list_20=new ArrayList<Integer>();
+                ArrayList<Integer> list_lclcargo=new ArrayList<Integer>();
 
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
@@ -138,11 +151,27 @@ public class Incargo extends AppCompatActivity {
                 }
                 Collections.reverse(listItems);
                 int listItems_count=listItems.size();
+                int sum40=0;
+                int sum20=0;
+                int lcl=0;
                 for(int i=0;i<listItems_count;i++){
                     String str_consignee=listItems.get(i).getConsignee();
-                    Log.i("koaca",str_consignee);
+                    int int_40=Integer.parseInt(listItems.get(i).getContainer40());
+                    int int_20=Integer.parseInt(listItems.get(i).getContainer20());
+                    int int_lclcargo=Integer.parseInt(listItems.get(i).getLclcargo());
+                    list_40.add(int_40);
+                    list_20.add(int_20);
+                    list_lclcargo.add(int_lclcargo);
+                    sum40=sum40+list_40.get(i);
+                    sum20=sum20+list_20.get(i);
+                    lcl=lcl+list_lclcargo.get(i);
+
+                    incargo_40ft.setText("40FT:"+sum40);
+                    incargo_20ft.setText("20FT:"+sum20);
+                    incargo_lclcargo.setText("LcL"+lcl+"PLT");
                     arrConsignee.add("All");
                     arrConsignee.add(str_consignee);
+                    System.out.println(list_lclcargo);
                 }
                 consignee_list=arrConsignee.toArray(new String[arrConsignee.size()]);
                 arrConsignee.clear();
@@ -169,26 +198,18 @@ public class Incargo extends AppCompatActivity {
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
                         listConsignee.setTag("");
-                        text_listConsignee.setText("");
-
-                    }
+                        text_listConsignee.setText(""); }
                 });
+
 
                 adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Data Server connection Error", Toast.LENGTH_SHORT).show();
-
             }
-
         };
-
-//    nowDated=date_Start.getText().toString();
         String nowDated1 = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-//        String nowDated1=date_Start.getText().toString();
-
         Query sortbyDate;
         if(str_sort.equals("long")) {
             sortbyDate = databaseReference.orderByChild(sort);
@@ -212,11 +233,6 @@ public class Incargo extends AppCompatActivity {
                     if(data.getDate().equals(date_list)){
                     listItems.add(data);}
                 }
-//                listItems.sort()
-
-
-//
-
 
                    adapter.notifyDataSetChanged();
 
@@ -230,25 +246,14 @@ public class Incargo extends AppCompatActivity {
         String consignee_list=text_listConsignee.getText().toString();
 
 
-if(text_listConsignee.getText().toString().equals("")){
-    Query sortbySort=databaseReference.orderByChild("date").equalTo(date_Start.getText().toString());
+if(text_listConsignee.getText().toString().equals("All")||text_listConsignee.getText().toString().equals("")){
+    Query sortbySort=databaseReference.orderByChild("date");
     sortbySort.addListenerForSingleValueEvent(postListener);
-    Log.i("ifCheck","true");
-
 
 }else{
     Query sortbySort=databaseReference.orderByChild("consignee").equalTo(consignee_list);
     sortbySort.addListenerForSingleValueEvent(postListener);
-    Log.i("ifChck","false");
-    Log.i("ifCheck",text_listConsignee.getText().toString());
-}
-
-
-
-
-
-
-
+   }
     }
     public void processDatePickerResult(int year, int month, int dayOfMonth) {
         String month_string=Integer.toString(month+1);
