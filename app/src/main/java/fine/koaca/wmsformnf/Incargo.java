@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
     String b;
 
     RadioGroup dateSelect;
+    RadioButton rBtn_fixDate;
 
     String nowDated;
 
@@ -62,6 +64,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
     Button btn_sort;
     String str_sort="sort";
+    String str_sort_date="total";
 
     TextView incargo_40ft;
     TextView incargo_20ft;
@@ -76,6 +79,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
         incargo_40ft=findViewById(R.id.incargo_40ft);
         incargo_20ft=findViewById(R.id.incargo_20ft);
         incargo_lclcargo=findViewById(R.id.incargo_lcl);
+
+        rBtn_fixDate=findViewById(R.id.rBtn_FixDate);
 
         recyclerView=findViewById(R.id.incargo_recyclerViewList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -92,16 +97,16 @@ public class Incargo extends AppCompatActivity implements Serializable {
         listConsignee=findViewById(R.id.incargo_spinner_listconsignee);
         text_listConsignee=findViewById(R.id.incargo_listconsignee);
 
-
-        date_Start=findViewById(R.id.textView_dateStart);
-        date_Start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                b="b";
-                DialogFragment newFragment=new DatePickerFragment(b);
-                newFragment.show(getSupportFragmentManager(),"datePicker");
-            }
-        });
+//
+//        date_Start=findViewById(R.id.textView_dateStart);
+//        date_Start.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                b="b";
+//                DialogFragment newFragment=new DatePickerFragment(b);
+//                newFragment.show(getSupportFragmentManager(),"datePicker");
+//            }
+//        });
 
         getFirebaseIncargoDatabase();
 
@@ -109,7 +114,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
         btn_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSortFirebasedata();
+               str_sort="consignee";
+               getFirebaseIncargoDatabase();
             }
         });
         btn_sort.setOnLongClickListener(new View.OnLongClickListener() {
@@ -130,10 +136,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         nowDated = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-        date_Start.setText(nowDated);
-        Log.i("nowDated",nowDated);
-
-
     }
 
     public void getFirebaseIncargoDatabase(){
@@ -141,13 +143,19 @@ public class Incargo extends AppCompatActivity implements Serializable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
+                String date_list=rBtn_fixDate.getText().toString();
                 ArrayList<Integer> list_40 = new ArrayList<Integer>();
                 ArrayList<Integer> list_20=new ArrayList<Integer>();
                 ArrayList<Integer> list_lclcargo=new ArrayList<Integer>();
 
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
-                    listItems.add(data);
+                    if(str_sort.equals("consignee")&& !str_sort_date.equals("total")){
+                        if(data.getDate().equals(date_list)){
+                            listItems.add(data);}
+                    }else{
+
+                    listItems.add(data);}
                 }
                 Collections.reverse(listItems);
                 int listItems_count=listItems.size();
@@ -209,12 +217,22 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 Toast.makeText(getApplicationContext(), "Data Server connection Error", Toast.LENGTH_SHORT).show();
             }
         };
+        String consignee_list=text_listConsignee.getText().toString();
         String nowDated1 = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         Query sortbyDate;
         if(str_sort.equals("long")) {
             sortbyDate = databaseReference.orderByChild(sort);
 
-        }else{
+        }else if(str_sort.equals("consignee")){
+            if(text_listConsignee.getText().toString().equals("All")||text_listConsignee.getText().toString().equals("")){
+                sortbyDate=databaseReference.orderByChild("date");
+            }else if(str_sort_date.equals("total")){
+                sortbyDate=databaseReference.orderByChild("consignee").equalTo(consignee_list);
+            }else{
+                sortbyDate=databaseReference.orderByChild("consignee").equalTo(consignee_list);
+            }
+        }
+        else{
             sortbyDate = databaseReference.orderByChild(sort).equalTo(nowDated1);
         }
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
@@ -233,6 +251,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                     if(data.getDate().equals(date_list)){
                     listItems.add(data);}
                 }
+
 
                    adapter.notifyDataSetChanged();
 
@@ -276,7 +295,7 @@ if(text_listConsignee.getText().toString().equals("All")||text_listConsignee.get
 
         switch(b){
            case "b":
-           date_Start.setText(dataMessage);
+           rBtn_fixDate.setText(dataMessage);
            break;
            case "c":
                date_End.setText(dataMessage);
@@ -289,6 +308,14 @@ if(text_listConsignee.getText().toString().equals("All")||text_listConsignee.get
     RadioGroup.OnCheckedChangeListener radioListener= new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
+            if(checkedId==R.id.rBtn_Total){
+                str_sort_date="total";
+            }else if(checkedId==R.id.rBtn_FixDate){
+                b="b";
+                DialogFragment newFragment=new DatePickerFragment(b);
+                newFragment.show(getSupportFragmentManager(),"datePicker");
+
+            }
 
         }
     };
