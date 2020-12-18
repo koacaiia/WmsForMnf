@@ -41,14 +41,6 @@ public class Fine2IncargoListAdapter extends RecyclerView.Adapter<Fine2IncargoLi
           String str_incargo=String.valueOf(fine2IncargoLists.get(position).getIncargo());
           String location_chk=fine2IncargoLists.get(position).getLocation();
 
-
-
-//        holder.working.setText(fine2IncargoLists.get(position).getWorking());
-//        holder.consignee.setText(fine2IncargoLists.get(position).getConsignee());
-//        holder.container40.setText(fine2IncargoLists.get(position).getContainer40());
-//        holder.container20.setText(fine2IncargoLists.get(position).getContainer20());
-//        holder.lclCargo.setText(fine2IncargoLists.get(position).getLclCargo());
-
             holder.date.setText(fine2IncargoLists.get(position).getDate());
             holder.bl.setText(fine2IncargoLists.get(position).getBl());
             holder.incargo.setText(str_incargo);
@@ -84,7 +76,8 @@ public class Fine2IncargoListAdapter extends RecyclerView.Adapter<Fine2IncargoLi
     }
     @Override
     public int getItemCount() {
-        return fine2IncargoLists.size();
+//        return fine2IncargoLists.size();
+        return (fine2IncargoLists !=null ? fine2IncargoLists.size():0);
     }
 
     @Override

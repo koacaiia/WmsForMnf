@@ -10,6 +10,7 @@ public class ListIncargo {
     String date;
     String consignee;
     String container;
+    String incargo;
     String container40;
     String container20;
     String lclcargo;
@@ -22,7 +23,8 @@ public class ListIncargo {
 
     }
 
-    public ListIncargo(String working, String date, String consignee, String container, String container40, String container20, String lclcargo, String remark) {
+    public ListIncargo(String working, String date, String consignee, String container, String container40, String container20,
+                       String lclcargo, String remark,String incargo) {
 
         this.working = working;
         this.date = date;
@@ -32,6 +34,15 @@ public class ListIncargo {
         this.container20 = container20;
         this.lclcargo = lclcargo;
         this.remark = remark;
+        this.incargo=incargo;
+    }
+
+    public String getIncargo() {
+        return incargo;
+    }
+
+    public void setIncargo(String incargo) {
+        this.incargo = incargo;
     }
 
     public String getWorking() {
@@ -108,6 +119,7 @@ public class ListIncargo {
         result.put("container20",container20);
         result.put("lclcargo",lclcargo);
         result.put("remark",remark);
+        result.put("incargo",incargo);
         return result;
     }
 }

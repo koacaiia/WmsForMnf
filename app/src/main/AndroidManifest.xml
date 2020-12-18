@@ -3,7 +3,6 @@
     package="fine.koaca.wmsformnf">
 
     <uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
 
     <application
         android:allowBackup="true"
@@ -12,21 +11,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WmsForMnf">
-        <activity android:name=".Incargo"
-            android:label="Incargo_List"/>
-        <activity android:name=".CameraCapture" />
-        <activity android:name=".WebList" />
-        <activity android:name=".LocationA" />
-        <activity android:name=".Location"
-            android:label="Mnf_Location"/>
-        <activity android:name=".MainActivity"
-            android:label="엠엔에프 로케이션 관리">
+        <activity android:name=".Activity_Exercise"></activity>
+        <activity
+            android:name=".Incargo"
+            android:label="Incargo_List">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CameraCapture" />
+        <activity android:name=".WebList" />
+        <activity android:name=".LocationA" />
+        <activity
+            android:name=".Location"
+            android:label="Mnf_Location" />
+        <activity
+            android:name=".MainActivity"
+            android:label="엠엔에프 로케이션 관리" />
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package fine.koaca.wmsformnf;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -18,9 +20,15 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
     OnListItemClickListener listener;
     OnItemLongClickListener longClickListener;
     private SparseBooleanArray mSelectedItems=new SparseBooleanArray(0);
+    Context context;
 
-    public IncargoListAdapter(ArrayList<Fine2IncargoList> list, Incargo incargo) {
+    public IncargoListAdapter(ArrayList<Fine2IncargoList> list) {
         this.list = list;
+    }
+
+    public IncargoListAdapter(ArrayList<Fine2IncargoList> list, Context context) {
+        this.context=context;
+        this.list=list;
     }
 
     @NonNull
@@ -55,7 +63,17 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
         holder.remark.setText(list.get(position).getRemark());
         holder.bl.setText(list.get(position).getBl());
         holder.des.setText(list.get(position).getDescription());
+        holder.incargo.setText(list.get(position).getIncargo()+"(PLT)");
+        if (position<list.size()-1){
+//            String location_chk3=list.get(position-1).getContainer();
+            String location_chk1=list.get(position).getContainer();
+            String location_chk2=list.get(position+1).getContainer();
+            if (location_chk1.equals(location_chk2)) {
+                holder.itemView.setBackgroundColor(Color.BLUE);
+            } else {
+                holder.itemView.setBackgroundColor(Color.WHITE);
 
+        }}
     }
 
     public void setOnItemClicklistener(OnListItemClickListener listener){
@@ -96,6 +114,7 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
         TextView remark;
         TextView bl;
         TextView des;
+        TextView incargo;
         public ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,
                               final OnItemLongClickListener longClickListener) {
             super(itemView);
@@ -107,6 +126,7 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
             this.remark=itemView.findViewById(R.id.incargo_remark);
             this.bl=itemView.findViewById(R.id.incargo_bl);
             this.des=itemView.findViewById(R.id.incargo_des);
+            this.incargo=itemView.findViewById(R.id.incargo_incargo);
         }
     }
 }

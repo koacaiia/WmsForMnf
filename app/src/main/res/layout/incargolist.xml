@@ -93,11 +93,19 @@
                                     android:id="@+id/incargo_cargotype"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="1"
+                                    android:layout_weight="0.9"
                                     android:gravity="center"
                                     android:hint="LCLcargo"
-                                    android:textStyle="bold|italic"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"
+                                    android:textStyle="bold|italic" />
+
+                                <TextView
+                                    android:id="@+id/incargo_incargo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.85"
+                                    android:gravity="center"
+                                    android:text="TextView" />
 
                                 <TextView
                                     android:id="@+id/incargo_bl"
