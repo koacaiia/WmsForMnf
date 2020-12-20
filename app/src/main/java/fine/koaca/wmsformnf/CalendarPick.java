@@ -8,15 +8,26 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class CalendarPick {
-    String monday;
-    String sunday;
+
     Calendar cal= Calendar.getInstance();
     SimpleDateFormat dateFormat=new SimpleDateFormat("yyyyMMdd");
     int dayOfWeek=cal.get(Calendar.DATE);
     Date nowDate=new Date();
+    String date_mon;
+    String date_sat;
+    String date_Nmon;
+    String date_Nsat;
+    String date_startMonth;
+    String date_lastMonth;
+
+    String year;
+    String month;
+    String day;
+
 
     public void CalendarCall(){
       String nowDated = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+      Incargo incargo=new Incargo();
 
             SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
@@ -24,25 +35,32 @@ public class CalendarPick {
             Calendar c=Calendar.getInstance();
 
             c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
-            String date_mon=formatter.format(c.getTime());
-            Log.i("Date_mon",date_mon);
+            date_mon=formatter.format(c.getTime());
+            incargo.day_start=formatter.format(c.getTime());
 
             c.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
 //            c.add(c.DATE,7);
-            String date_sat=formatter.format(c.getTime());
-            Log.i("Date_sat",date_sat);
+            date_sat=formatter.format(c.getTime());
 
-         String date_startMonth=Integer.toString(c.getMinimum(Calendar.DAY_OF_MONTH));
-         Log.i("Date_1",date_startMonth);
+            c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+            c.add(c.DATE,7);
+            date_Nmon=formatter.format(c.getTime());
 
-         String date_lastMonth=Integer.toString(c.getActualMaximum(Calendar.DAY_OF_MONTH));
-         Log.i("Date_30",date_lastMonth);
+            c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+            c.add(c.DATE,7);
+            date_Nsat=formatter.format(c.getTime());
+         c.getMinimum(Calendar.DAY_OF_MONTH+1);
+         date_startMonth=formatter.format(c.getTime());
+         date_lastMonth=Integer.toString(c.getActualMaximum(Calendar.DAY_OF_MONTH));
 
 
-        final Calendar c1= Calendar.getInstance();
-        int year=c1.get(Calendar.YEAR);
-        int month=c1.get(Calendar.MONTH);
-        int day=c1.get(Calendar.DAY_OF_MONTH);
+
+        year=String.valueOf(cal.get(Calendar.YEAR));
+        month=String.valueOf(cal.get(Calendar.MONTH)+1);
+        day=String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+        Log.i("koaca+_date_All",year+month+day);
+
+
     }
 
 

@@ -40,35 +40,27 @@ import java.util.Date;
 
 public class Incargo extends AppCompatActivity implements Serializable {
     ArrayList<Fine2IncargoList> listItems;
-    static ArrayList<Fine2IncargoList> arr_listItems=new ArrayList<>();
-    IncargoListAdapter adapter;
+     IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
     String sort="date";
+    String sort_dialog="dialogsort";
     String sortConsignee;
-    Spinner listConsignee;
-    TextView text_listConsignee;
+
 
     ArrayList<String> arrConsignee = new ArrayList<>();
     String [] consignee_list;
     String [] consignee_list2;
 
     String dataMessage;
-    String b;
 
-    RadioGroup dateSelect;
-    RadioButton rBtn_fixDate;
-    RadioButton rBtn_total;
-
-    Button btn_sort;
     Button incargo_location;
-    String str_sort="sort";
-    String str_sort_date="total";
+    String str_sort="long";
+    String str_sort_date="today_init";
 
-    TextView incargo_40ft;
-    TextView incargo_20ft;
-    TextView incargo_lclcargo;
+
+
     TextView incargo_incargo;
 
     String container40;
@@ -78,6 +70,13 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
     String nowDated = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
+
+    TextView dia_date;
+    TextView dia_consignee;
+
+    String day_start;
+    String day_end;
+    String dia_dateInit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +90,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 //        incargo_lclcargo=findViewById(R.id.incargo_lcl);
         incargo_incargo=findViewById(R.id.incargo_incargo);
 
-        rBtn_fixDate=findViewById(R.id.rBtn_FixDate);
-        rBtn_total=findViewById(R.id.rBtn_Total);
+
 
         recyclerView=findViewById(R.id.incargo_recyclerViewList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -105,38 +103,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
 
-
-
-
-        listConsignee=findViewById(R.id.incargo_spinner_listconsignee);
-        text_listConsignee=findViewById(R.id.incargo_listconsignee);
-
         getFirebaseIncargoDatabase();
-
-//        btn_sort=findViewById(R.id.btn_sort);
-//        btn_sort.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//               str_sort="consignee";
-//               getFirebaseIncargoDatabase();
-//            }
-//        });
-//        btn_sort.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                getFirebaseIncargoDatabase();
-//
-//
-//                rBtn_total.setChecked(false);
-//
-//                str_sort="long";
-//                return true;
-//            }
-//        });
-
-        dateSelect=findViewById(R.id.radion_dateSelect);
-        dateSelect.setOnCheckedChangeListener(radioListener);
-        rBtn_fixDate.setText(nowDated);
 
         incargo_location=findViewById(R.id.incargo_location);
         incargo_location.setOnClickListener(new View.OnClickListener() {
@@ -150,14 +117,17 @@ public class Incargo extends AppCompatActivity implements Serializable {
         incargo_location.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Intent intent=new Intent(Incargo.this,Activity_Exercise.class);
-                startActivity(intent);
+//                Intent intent=new Intent(Incargo.this,Activity_Exercise.class);
+//                startActivity(intent);
+                sort_dialog="dialogsort";
+                str_sort_date="total";
+                str_sort="long";
+
                 dialogMessage(container40,container20,lclcargo,inCargo, consignee_list2);
                 return true;
             }
         });
-
-
+        dia_dateInit=nowDated;
     }
 
     public void getFirebaseIncargoDatabase(){
@@ -165,8 +135,9 @@ public class Incargo extends AppCompatActivity implements Serializable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
+                arrConsignee.clear();
 
-                String date_list=rBtn_fixDate.getText().toString();
+
                 ArrayList<Integer> list_40 = new ArrayList<Integer>();
                 ArrayList<Integer> list_20=new ArrayList<Integer>();
                 ArrayList<Integer> list_lclcargo=new ArrayList<Integer>();
@@ -174,15 +145,19 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
-                    if(str_sort.equals("consignee")&& !str_sort_date.equals("total")){
-                      if(str_sort_date.equals("fixed")){
-                        if(data.getDate().equals(date_list)){
+                    Log.i("list_size2",str_sort);
+                    if(str_sort.equals("long")){
+                        listItems.add(data);}
+                    else if(str_sort.equals("sort")){
+                        if(dia_consignee.getText().toString().equals("All")){
                             listItems.add(data);
-                            arr_listItems.add(data);
-                          }}
-                    }else{
-                        arr_listItems.add(data);
-                    listItems.add(data);}
+                            Log.i("list_size2",str_sort);
+                        }
+                        if(data.getConsignee().equals(dia_consignee.getText().toString())){
+                            listItems.add(data);
+                        }else{}
+                        dia_dateInit=dia_date.getText().toString();
+                    }
                 }
 
                 Collections.reverse(listItems);
@@ -193,6 +168,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 int sumIncargo=0;
                 for(int i=0;i<listItems_count;i++){
                     String str_consignee=listItems.get(i).getConsignee();
+                    Log.i("list_size3",String.valueOf(listItems_count)+str_sort);
+
                     int int_40=Integer.parseInt(listItems.get(i).getContainer40());
                     int int_20=Integer.parseInt(listItems.get(i).getContainer20());
                     int int_lclcargo=Integer.parseInt(listItems.get(i).getLclcargo());
@@ -210,13 +187,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
                     container20="20FT*"+sum20;
                     lclcargo="LcL화물:"+lcl+"PLT";
                     inCargo="총 입고 팔렛트 수량:"+sumIncargo+"(PLT)";
-
-//                    incargo_40ft.setText(container40);
-//                    incargo_20ft.setText(container20);
-//                    incargo_lclcargo.setText(lclcargo);
-
-                    Log.i("koaca_incargo",inCargo);
-
                     arrConsignee.add("All");
                     arrConsignee.add(str_consignee);
 
@@ -228,59 +198,160 @@ public class Incargo extends AppCompatActivity implements Serializable {
                         arrConsignee.add(item);}
 
                 consignee_list2=arrConsignee.toArray(new String[arrConsignee.size()]);
-
-                ArrayAdapter<String> consigneeAdapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,
-                        consignee_list2);
-                consigneeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                listConsignee.setAdapter(consigneeAdapter);
-                listConsignee.setSelected(false);
-                listConsignee.setSelection(0,true);
-                listConsignee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        sortConsignee= consignee_list2[position];
-                        text_listConsignee.setText(sortConsignee);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        listConsignee.setTag("");
-                        text_listConsignee.setText(""); }
-                });
-
-
                 adapter.notifyDataSetChanged();
+                if(sort_dialog.equals("dialogsort")){
                 dialogMessage(container40,container20,lclcargo,inCargo,consignee_list2);
+
+                }else if(sort_dialog.equals("init")){
+                    dialogMessage(consignee_list2);
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Data Server connection Error", Toast.LENGTH_SHORT).show();
             }
         };
-        String consignee_list=text_listConsignee.getText().toString();
+//        String consignee_list=text_listConsignee.getText().toString();
 
-        Query sortbyDate;
-        if(str_sort.equals("long")) {
-            sortbyDate = databaseReference.orderByChild(sort);
+        Query sortbyDate = null;
 
-        }else if(str_sort.equals("consignee")){
-            if(text_listConsignee.getText().toString().equals("All")||text_listConsignee.getText().toString().equals("")){
-                sortbyDate=databaseReference.orderByChild("date");
-            }else if(str_sort_date.equals("total")){
-                sortbyDate=databaseReference.orderByChild("consignee").equalTo(consignee_list);
-            }else{
-                sortbyDate=databaseReference.orderByChild("consignee").equalTo(consignee_list);
-            }
-        }
-        else{
-            sortbyDate = databaseReference.orderByChild(sort).equalTo(nowDated);
-        }
+      switch(str_sort_date){
+          case "total":
+          sortbyDate = databaseReference.orderByChild("date");
+          break;
+          case "fixed1":
+              sortbyDate=databaseReference.orderByChild("date").equalTo(dia_date.getText().toString());
+              break;
+          case "fixed2":
+              sortbyDate=databaseReference.orderByChild("date").startAt(day_start).endAt(day_end);
+              break;
+          case "today_init":
+              sortbyDate=databaseReference.orderByChild("date").equalTo(nowDated);
+
+      }
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
+    }
+
+    private void dialogMessage(String[] consignee_list2) {
+        final String fixedDate = "날짜지정";
+
+        ArrayList<String> dateSelected=new ArrayList<String>();
+        dateSelected.add(fixedDate);
+        dateSelected.add("이번 주");
+        dateSelected.add("다음 주");
+        dateSelected.add("이번 달");
+        dateSelected.add("전체");
+        ArrayList selectedItems=new ArrayList();
+        int defaultItem=0;
+        selectedItems.add(defaultItem);
+        this.consignee_list2=consignee_list2;
+
+        String[] dateList=dateSelected.toArray(new String[dateSelected.size()]);
+        AlertDialog.Builder builder=new AlertDialog.Builder(Incargo.this);
+        View view=getLayoutInflater().inflate(R.layout.spinnerlist,null);
+        Spinner sp=view.findViewById(R.id.incargo_spinner_listconsignee1);
+        dia_date=view.findViewById(R.id.dia_date);
+        dia_date.setText(nowDated);
+        dia_consignee=view.findViewById(R.id.dia_consignee);
+        ArrayAdapter<String> consigneelistAdapter=new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item, Incargo.this.consignee_list2);
+        consigneelistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(consigneelistAdapter);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sortConsignee=consignee_list2[position];
+                Log.i("koaca_consignee",sortConsignee);
+                dia_consignee.setText(sortConsignee);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        builder.setView(view);
+        builder.create();
+        builder.setSingleChoiceItems(dateList,defaultItem,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CalendarPick calendarPick=new CalendarPick();
+                calendarPick.CalendarCall();
+                switch(which){
+                    case 0:
+                        String a="b";
+                        str_sort_date="fixed1";
+                        str_sort="sort";
+                        dia_dateInit=dia_date.getText().toString();
+
+                        DatePickerFragment datePickerFragment=new DatePickerFragment(a);
+                        datePickerFragment.show(getSupportFragmentManager(),"datePicker");
+                    break;
+                    case 1:
+
+                        str_sort_date="fixed2";
+                        str_sort="sort";
+                       day_start=calendarPick.date_mon;
+                       day_end=calendarPick.date_sat;
+                       dia_dateInit=day_start+"~"+day_end;
+
+                        break;
+                    case 2:
+
+                        str_sort_date="fixed2";
+                        str_sort="sort";
+                        day_start=calendarPick.date_Nmon;
+                        day_end=calendarPick.date_Nsat;
+                        dia_dateInit=day_start+"~"+day_end;
+
+                                             break;
+                    case 3:
+                        str_sort="sort";
+                        str_sort_date="fixed2";
+                        day_start=calendarPick.year+"-"+calendarPick.month+"-"+"01";
+                        day_end=calendarPick.year+"-"+calendarPick.month+"-"+calendarPick.date_lastMonth;
+                        dia_dateInit=day_start+"~"+day_end;
+                        break;
+                    case 4:
+                       day_start="전체";
+                       day_end="조회";
+                       str_sort="long";
+                       str_sort_date="total";
+
+                        break;
+
+                }
+                dia_date.setText(day_start+"~"+day_end);
+                Log.i("list_size1",str_sort);
 
 
 
+            }
+        });
 
+        builder.setPositiveButton("조회", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sort_dialog="dialogsort";
+                getFirebaseIncargoDatabase();
+                Toast.makeText(Incargo.this, "화주명:"+dia_consignee.getText().toString()+"\n"+"검색기간"+dia_date.getText().toString()+
+                                "\n"+
+                                "화물을 " +
+                                "조회 합니다.",
+                        Toast.LENGTH_LONG).show();
+
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setTitle("조건별 화물 조회");
+        builder.show();
     }
 
     public void processDatePickerResult(int year, int month, int dayOfMonth) {
@@ -293,96 +364,61 @@ public class Incargo extends AppCompatActivity implements Serializable {
         }
         String year_string=Integer.toString(year);
         dataMessage=(year_string+"-"+month_string+"-"+day_string);
-        SimpleDateFormat transFormat=new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date to=transFormat.parse(dataMessage);
-            Log.i("kocaDate",dataMessage);
-            Log.i("koacaDatetrance",transFormat.format(to));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        switch(b){
-           case "b":
-           rBtn_fixDate.setText(dataMessage);
-           break;
-
-       }
+//        SimpleDateFormat transFormat=new SimpleDateFormat("yyyy-MM-dd");
+        dia_date.setText(dataMessage);
+//        try {
+//            Date to=transFormat.parse(dataMessage);
+//            Log.i("kocaDate",dataMessage);
+//            Log.i("koacaDatetrance",transFormat.format(to));
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        switch(b){
+//           case "b":
+//
+//           break;
+//
+//       }
     }
-    RadioGroup.OnCheckedChangeListener radioListener= new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if(checkedId==R.id.rBtn_Total){
-                str_sort_date="total";
-            }else if(checkedId==R.id.rBtn_FixDate){
-                str_sort_date="fixed";
-                b="b";
-                DialogFragment newFragment=new DatePickerFragment(b);
-                newFragment.show(getSupportFragmentManager(),"datePicker");
-                rBtn_fixDate.setChecked(false);
-            }else {
-                Toast.makeText(Incargo.this, "미구현 Event 입니다.", Toast.LENGTH_SHORT).show();
 
-            }
 
-        }
-    };
-
-    public void dialogMessage(String container40, String container20, String lclcargo, String inCargo, String[] listItems){
-        String datedFixed=rBtn_fixDate.getText().toString();
-        ArrayList<String> list_container=new ArrayList<>();
-        list_container.add(container40);
-        list_container.add(container20);
-        list_container.add(lclcargo);
-
-        String[] items_container=list_container.toArray(new String[list_container.size()]);
+    public void dialogMessage(String container40, String container20, String lclcargo, String inCargo, String[] consignee_list2){
+//        String datedFixed=rBtn_fixDate.getText().toString();
+        this.consignee_list2=consignee_list2;
 
         AlertDialog.Builder dialog=new AlertDialog.Builder(Incargo.this);
-        dialog.setTitle(datedFixed+"__"+"입고 화물 현황");
+        dialog.setTitle(dia_dateInit+"__"+"입고 화물 현황");
         dialog.setMessage(container40 +"\n"+container20 +"\n"+ lclcargo+"\n"+inCargo);
-//        dialog.setItems(items_container, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(Incargo.this, "입고확인", Toast.LENGTH_SHORT).show();
-
 
             }
         });
         dialog.setNegativeButton("전화물조회", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                str_sort="consignee";
+                sort_dialog="dialogsort";
+                str_sort_date="total";
+                str_sort="long";
+                dia_dateInit="전체";
                 getFirebaseIncargoDatabase();
-
 
             }
         });
         dialog.setNeutralButton("조건별 화물 조회", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(Incargo.this);
-                View view=getLayoutInflater().inflate(R.layout.spinnerlist,null);
-                Spinner sp=(Spinner)view.findViewById(R.id.incargo_spinner_listconsignee1);
-                ArrayAdapter<String> consigneelistAdapter=new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_spinner_dropdown_item,consignee_list2);
-                consigneelistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sp.setAdapter(consigneelistAdapter);
-
-                builder.setView(view);
-                builder.create();
-                builder.show();
-
-
-
-
+               str_sort_date="total";
+                sort_dialog="init";
+                str_sort="long";
+                getFirebaseIncargoDatabase();
             }
         });
+
 
         dialog.show();
 
