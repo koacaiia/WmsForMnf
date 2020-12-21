@@ -40,7 +40,7 @@ import java.util.Date;
 
 public class Incargo extends AppCompatActivity implements Serializable {
     ArrayList<Fine2IncargoList> listItems;
-     IncargoListAdapter adapter;
+    IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
@@ -48,13 +48,11 @@ public class Incargo extends AppCompatActivity implements Serializable {
     String sort_dialog="dialogsort";
     String sortConsignee;
 
-
     ArrayList<String> arrConsignee = new ArrayList<>();
     String [] consignee_list;
     String [] consignee_list2;
 
     String dataMessage;
-
     Button incargo_location;
     String str_sort="long";
     String str_sort_date="today_init";
@@ -62,14 +60,10 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
 
     TextView incargo_incargo;
-
     String container40;
     String container20;
     String lclcargo;
     String inCargo;
-
-    String nowDated = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-
 
     TextView dia_date;
     TextView dia_consignee;
@@ -85,13 +79,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         dataMessage = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-//        incargo_40ft=findViewById(R.id.incargo_40ft);
-//        incargo_20ft=findViewById(R.id.incargo_20ft);
-//        incargo_lclcargo=findViewById(R.id.incargo_lcl);
         incargo_incargo=findViewById(R.id.incargo_incargo);
-
-
-
         recyclerView=findViewById(R.id.incargo_recyclerViewList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -99,7 +87,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
-//        getFirebaseIncargoDatabase();
+
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
 
@@ -117,8 +105,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
         incargo_location.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-//                Intent intent=new Intent(Incargo.this,Activity_Exercise.class);
-//                startActivity(intent);
+
                 sort_dialog="dialogsort";
                 str_sort_date="total";
                 str_sort="long";
@@ -127,7 +114,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 return true;
             }
         });
-        dia_dateInit=nowDated;
+        dia_dateInit=new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
     }
 
     public void getFirebaseIncargoDatabase(){
@@ -145,13 +132,13 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
-                    Log.i("list_size2",str_sort);
+
+
                     if(str_sort.equals("long")){
                         listItems.add(data);}
                     else if(str_sort.equals("sort")){
                         if(dia_consignee.getText().toString().equals("All")){
                             listItems.add(data);
-                            Log.i("list_size2",str_sort);
                         }
                         if(data.getConsignee().equals(dia_consignee.getText().toString())){
                             listItems.add(data);
@@ -168,7 +155,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 int sumIncargo=0;
                 for(int i=0;i<listItems_count;i++){
                     String str_consignee=listItems.get(i).getConsignee();
-                    Log.i("list_size3",String.valueOf(listItems_count)+str_sort);
+
 
                     int int_40=Integer.parseInt(listItems.get(i).getContainer40());
                     int int_20=Integer.parseInt(listItems.get(i).getContainer20());
@@ -212,8 +199,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 Toast.makeText(getApplicationContext(), "Data Server connection Error", Toast.LENGTH_SHORT).show();
             }
         };
-//        String consignee_list=text_listConsignee.getText().toString();
-
         Query sortbyDate = null;
 
       switch(str_sort_date){
@@ -227,8 +212,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
               sortbyDate=databaseReference.orderByChild("date").startAt(day_start).endAt(day_end);
               break;
           case "today_init":
-              sortbyDate=databaseReference.orderByChild("date").equalTo(nowDated);
-
+              sortbyDate=
+                      databaseReference.orderByChild("date").equalTo(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
       }
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
     }
@@ -252,7 +237,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
         View view=getLayoutInflater().inflate(R.layout.spinnerlist,null);
         Spinner sp=view.findViewById(R.id.incargo_spinner_listconsignee1);
         dia_date=view.findViewById(R.id.dia_date);
-        dia_date.setText(nowDated);
+        dia_date.setText(dia_dateInit);
         dia_consignee=view.findViewById(R.id.dia_consignee);
         ArrayAdapter<String> consigneelistAdapter=new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item, Incargo.this.consignee_list2);
@@ -319,15 +304,9 @@ public class Incargo extends AppCompatActivity implements Serializable {
                        day_end="조회";
                        str_sort="long";
                        str_sort_date="total";
-
                         break;
-
                 }
                 dia_date.setText(day_start+"~"+day_end);
-                Log.i("list_size1",str_sort);
-
-
-
             }
         });
 
@@ -335,12 +314,13 @@ public class Incargo extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sort_dialog="dialogsort";
-                getFirebaseIncargoDatabase();
                 Toast.makeText(Incargo.this, "화주명:"+dia_consignee.getText().toString()+"\n"+"검색기간"+dia_date.getText().toString()+
                                 "\n"+
                                 "화물을 " +
                                 "조회 합니다.",
                         Toast.LENGTH_LONG).show();
+                getFirebaseIncargoDatabase();
+
 
             }
         });
@@ -364,28 +344,12 @@ public class Incargo extends AppCompatActivity implements Serializable {
         }
         String year_string=Integer.toString(year);
         dataMessage=(year_string+"-"+month_string+"-"+day_string);
-//        SimpleDateFormat transFormat=new SimpleDateFormat("yyyy-MM-dd");
         dia_date.setText(dataMessage);
-//        try {
-//            Date to=transFormat.parse(dataMessage);
-//            Log.i("kocaDate",dataMessage);
-//            Log.i("koacaDatetrance",transFormat.format(to));
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        switch(b){
-//           case "b":
-//
-//           break;
-//
-//       }
+
     }
 
 
     public void dialogMessage(String container40, String container20, String lclcargo, String inCargo, String[] consignee_list2){
-//        String datedFixed=rBtn_fixDate.getText().toString();
         this.consignee_list2=consignee_list2;
 
         AlertDialog.Builder dialog=new AlertDialog.Builder(Incargo.this);

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,14 +27,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     ArrayList<Fine2IncargoList> listItems;
+    ArrayList<Fine2IncargoList> listItemsCount;
     Fine2IncargoListAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -71,6 +69,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btn_camera;
     String sort="date";
     String a;
+    String databaseRef_sort1="consignee";
+    String databaseRef_sort2="코만";
+
+    ArrayList<String> databasePutList;
 
        @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +139,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn_databaseReg=findViewById(R.id.btn_databaseReg);
         btn_databaseReg.setOnClickListener(this);
+        btn_databaseReg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                databaseRegLongClick();
+                return true;
+            }
+        });
 
         btn_datalocation=findViewById(R.id.btn_location);
         btn_datalocation.setOnLongClickListener(new View.OnLongClickListener() {
@@ -288,32 +297,96 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getFirebaseDatabase();
 
         }
+
+    private void databaseRegLongClick() {
+           String location=textView_loc.getText().toString();
+           String count=textView_count.getText().toString();
+           String bl=textView_bl.getText().toString();
+           databaseRef_sort1="bl";
+           databaseRef_sort2=bl;
+
+           getFirebaseDatabase();
+
+
+
+    }
+
     public void getFirebaseDatabase(){
 
+
             ValueEventListener postListener=new ValueEventListener(){
+
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                    listItemsCount=new ArrayList<Fine2IncargoList>();
+                    listItemsCount.clear();
                     listItems.clear();
+
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
+                        String count=textView_count.getText().toString();
+                        if(databaseRef_sort1.equals("bl")){
+                            if(count.equals(data.getCount())){
+                                listItemsCount.add(data);
 
+                            }}
                         listItems.add(data);
-
                     }
+                    if(databaseRef_sort1.equals("bl")){
+                      listItems=listItemsCount;
+                        Log.i("countdata1",String.valueOf(listItems.size()));
+                    }
+                        listItems.sort(new IncargoListComparator(sort).reversed());
+                    Log.i("countdata2",String.valueOf(listItems.size()));
 
-                    listItems.sort(new IncargoListComparator(sort).reversed());
+
                     adapter.notifyDataSetChanged();
+                    if(databaseRef_sort1.equals("bl")){
+               getArrayList();
+                        Log.i("putdatasize", String.valueOf(listItemsCount.size()));}
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(MainActivity.this, "Data Server connection Error", Toast.LENGTH_SHORT).show();
                 }
             };
-            Query sortbyAge=databaseReference.orderByChild("consignee").equalTo("코만");
+            Query sortbyAge=databaseReference.orderByChild(databaseRef_sort1).equalTo(databaseRef_sort2);
             sortbyAge.addListenerForSingleValueEvent(postListener);
 
+
+
         }
+
+    private void getArrayList() {
+        Map<String,Object> childUpdates=new HashMap<>();
+        Map<String,Object> postValues=null;
+
+            for(int i=0;i<listItems.size();i++){
+
+            bl=listItems.get(i).getBl();
+            description=listItems.get(i).getDescription();
+            location=textView_loc.getText().toString();
+            date=listItems.get(i).getDate();
+            count=listItems.get(i).getCount();
+            remark=listItems.get(i).getRemark();
+            container=listItems.get(i).getContainer();
+            incargo=listItems.get(i).getIncargo();
+            container=listItems.get(i).getContainer();
+            container40=listItems.get(i).getContainer40();
+            container20=listItems.get(i).getContainer20();
+            lclCargo=listItems.get(i).getLclcargo();
+            working=listItems.get(i).getWorking();
+            Fine2IncargoList list=new Fine2IncargoList(bl,description,date,count,container,incargo,remark,container40,container20,
+                    lclCargo,working,
+                    location,consignee);
+                Log.i("putdatalistupdate",String.valueOf(location));
+            postValues=list.toMap();
+        childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
+
+        databaseReference.updateChildren(childUpdates);}
+
+        }
+
     public void intentSelect(String className){
         Intent intent=new Intent();
         switch(className){
@@ -361,6 +434,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     location,consignee);
             postValues=list.toMap(); }
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
+
         databaseReference.updateChildren(childUpdates); }
     @SuppressLint("NonConstantResourceId")
     @Override
