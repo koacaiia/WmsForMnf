@@ -323,7 +323,7 @@ if(add){
             date=listItems.get(i).getDate();
             count=listItems.get(i).getCount();
             remark=listItems.get(i).getRemark();
-            container=listItems.get(i).getContainer();
+            consignee=listItems.get(i).getConsignee();
             incargo=listItems.get(i).getIncargo();
             container=listItems.get(i).getContainer();
             container40=listItems.get(i).getContainer40();

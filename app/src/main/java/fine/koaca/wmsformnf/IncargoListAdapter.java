@@ -19,9 +19,17 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
     public interface AdapterClickListener{
         void onItemClick(View v,int pos);
     }
+
+    public interface AdapterLongClickListener{
+        void onLongItemClick(View v,int pos);
+    }
     private AdapterClickListener mListener=null;
+    private AdapterLongClickListener mLongListener=null;
     public void setAdapterClickListener(AdapterClickListener listener){
         this.mListener=listener;    }
+        public void setAdaptLongClickListener(AdapterLongClickListener listener){
+        this.mLongListener=listener;
+        }
 
     ArrayList<Fine2IncargoList> list;
     OnListItemClickListener listener;
@@ -116,6 +124,17 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
                         mListener.onItemClick(v,pos);
 
                 }}
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = getAdapterPosition();
+                    if (mLongListener != null){
+                        mLongListener.onLongItemClick(v,pos);
+                }
+
+                    return true;
+                }
             });
             }
         }}

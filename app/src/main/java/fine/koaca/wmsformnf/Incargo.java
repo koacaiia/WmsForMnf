@@ -68,7 +68,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
     String day_start;
     String day_end;
-    String dia_dateInit;
+    String dia_dateInit="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,26 +91,17 @@ public class Incargo extends AppCompatActivity implements Serializable {
         adapter.setAdapterClickListener(new IncargoListAdapter.AdapterClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
-                String containerName=listItems.get(pos).getContainer();
-                ValueEventListener containerListener=new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        listItems.clear();
-                        for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                            Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
-                            listItems.add(data);
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                };
-                Query sortContainer=databaseReference.orderByChild("container").equalTo(containerName);
-                sortContainer.addListenerForSingleValueEvent(containerListener);
+                String sortItemName=listItems.get(pos).getContainer();
+                String filterItemName="container";
+                sortGetFirebaseIncargoDatabase(filterItemName,sortItemName);
+            }
+        });
+        adapter.setAdaptLongClickListener(new IncargoListAdapter.AdapterLongClickListener() {
+            @Override
+            public void onLongItemClick(View v, int pos) {
+                String sortItemName=listItems.get(pos).getConsignee();
+                String filterItemName="consignee";
+                sortGetFirebaseIncargoDatabase(filterItemName,sortItemName);
             }
         });
 
@@ -139,12 +130,36 @@ public class Incargo extends AppCompatActivity implements Serializable {
         getFirebaseIncargoDatabase();
     }
 
+    private void sortGetFirebaseIncargoDatabase(String filterItemName,String sortItemName) {
+        ValueEventListener sortItemsListener=new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listItems.clear();
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
+                    if(dia_dateInit.equals(data.getDate())){
+                    listItems.add(data);}
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        Query sortContainer=databaseReference.orderByChild(filterItemName).equalTo(sortItemName);
+        sortContainer.addListenerForSingleValueEvent(sortItemsListener);
+    }
+
     public void getFirebaseIncargoDatabase(){
         ValueEventListener incargoListener= new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
                 arrConsignee.clear();
+
 
 
                 ArrayList<Integer> list_40 = new ArrayList<Integer>();
@@ -228,7 +243,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
           sortbyDate = databaseReference.orderByChild("date");
           break;
           case "fixed1":
-              sortbyDate=databaseReference.orderByChild("date").equalTo(dia_date.getText().toString());
+              sortbyDate=databaseReference.orderByChild("date").equalTo(dia_dateInit);
               break;
           case "fixed2":
               sortbyDate=databaseReference.orderByChild("date").startAt(day_start).endAt(day_end);
@@ -238,6 +253,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                       databaseReference.orderByChild("date").equalTo(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
       }
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
+      Log.i("dateInit",dia_dateInit);
     }
 
     private void dialogMessage(String[] consignee_list2) {

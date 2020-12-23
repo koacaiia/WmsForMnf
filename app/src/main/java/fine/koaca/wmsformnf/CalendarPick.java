@@ -1,5 +1,6 @@
 package fine.koaca.wmsformnf;
 
+import android.app.DatePickerDialog;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,12 +36,16 @@ public class CalendarPick {
             Log.i("Date_now",nowDated);
             Calendar c=Calendar.getInstance();
 
+
+
+
             c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
             date_mon=formatter.format(c.getTime());
             incargo.day_start=formatter.format(c.getTime());
 
+
             c.add(c.DATE,2);
-            date_tomorrow=formatter.format(c.getTime());
+//            date_tomorrow=formatter.format(c.getTime());
 
             c.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
 //            c.add(c.DATE,7);
@@ -61,8 +66,8 @@ public class CalendarPick {
 
         year=String.valueOf(cal.get(Calendar.YEAR));
         month=String.valueOf(cal.get(Calendar.MONTH)+1);
-        day=String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-        Log.i("koaca+_date_All",year+month+day);
+        day=String.valueOf(cal.get(Calendar.DAY_OF_MONTH)+1);
+        date_tomorrow=year+"-"+month+"-"+day;
 
 
     }
