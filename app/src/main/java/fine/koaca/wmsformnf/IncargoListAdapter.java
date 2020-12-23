@@ -2,6 +2,7 @@ package fine.koaca.wmsformnf;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.icu.text.MessagePattern;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -14,7 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.ListViewHolder> implements OnListItemClickListener,OnItemLongClickListener{
+public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.ListViewHolder> {
+    public interface AdapterClickListener{
+        void onItemClick(View v,int pos);
+    }
+    private AdapterClickListener mListener=null;
+    public void setAdapterClickListener(AdapterClickListener listener){
+        this.mListener=listener;    }
 
     ArrayList<Fine2IncargoList> list;
     OnListItemClickListener listener;
@@ -35,7 +42,7 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
     @Override
     public IncargoListAdapter.ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.incargolist,parent,false);
-                return new ListViewHolder(view,this,this);
+                return new ListViewHolder(view);
     }
 
     @Override
@@ -76,36 +83,11 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
         }}
     }
 
-    public void setOnItemClicklistener(OnListItemClickListener listener){
-        this.listener=listener;
-    }
-
-    public void setLongClickListener(OnItemLongClickListener longClickListener){
-        this.longClickListener=longClickListener;
-    }
     @Override
     public int getItemCount() {
         return list.size();
     }
-
-    @Override
-    public void onLongItemClick(Fine2IncargoListAdapter.ListViewHolder listViewHolder, View v, int pos) {
-        if(longClickListener !=null){
-            longClickListener.onLongItemClick(listViewHolder,v,pos);
-        }
-
-    }
-
-    @Override
-    public void onItemClick(Fine2IncargoListAdapter.ListViewHolder holder, View view, int position) {
-        if(listener !=null){
-            listener.onItemClick(holder,view,position);
-        }
-
-
-    }
-
-    public class ListViewHolder extends RecyclerView.ViewHolder{
+        public class ListViewHolder extends RecyclerView.ViewHolder{
         TextView working;
         TextView date;
         TextView container;
@@ -115,8 +97,7 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
         TextView bl;
         TextView des;
         TextView incargo;
-        public ListViewHolder(@NonNull View itemView,final OnListItemClickListener listener,
-                              final OnItemLongClickListener longClickListener) {
+        public ListViewHolder(@NonNull View itemView) {
             super(itemView);
             this.working=itemView.findViewById(R.id.incargo_working);
             this.date=itemView.findViewById(R.id.incargo_date);
@@ -127,6 +108,14 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
             this.bl=itemView.findViewById(R.id.incargo_bl);
             this.des=itemView.findViewById(R.id.incargo_des);
             this.incargo=itemView.findViewById(R.id.incargo_incargo);
-        }
-    }
-}
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos=getAdapterPosition();
+                    if(mListener !=null){
+                        mListener.onItemClick(v,pos);
+
+                }}
+            });
+            }
+        }}

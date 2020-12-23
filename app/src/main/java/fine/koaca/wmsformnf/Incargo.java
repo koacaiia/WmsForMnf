@@ -88,14 +88,31 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClicklistener(new OnListItemClickListener() {
+        adapter.setAdapterClickListener(new IncargoListAdapter.AdapterClickListener() {
             @Override
-            public void onItemClick(Fine2IncargoListAdapter.ListViewHolder holder, View view, int position) {
+            public void onItemClick(View v, int pos) {
+                String containerName=listItems.get(pos).getContainer();
+                ValueEventListener containerListener=new ValueEventListener() {
 
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listItems.clear();
+                        for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                            Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
+                            listItems.add(data);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                };
+                Query sortContainer=databaseReference.orderByChild("container").equalTo(containerName);
+                sortContainer.addListenerForSingleValueEvent(containerListener);
             }
         });
-
-
 
         incargo_location=findViewById(R.id.incargo_location);
         incargo_location.setOnClickListener(new View.OnClickListener() {
@@ -225,8 +242,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
     private void dialogMessage(String[] consignee_list2) {
         final String fixedDate = "날짜지정";
-
-
         ArrayList<String> dateSelected=new ArrayList<String>();
         dateSelected.add("내일 전체화물 입고 일정");
         dateSelected.add(fixedDate);
