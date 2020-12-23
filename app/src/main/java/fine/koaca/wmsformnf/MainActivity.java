@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,12 +75,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ArrayList<String> databasePutList;
 
+    RecyclerView recyclerView;
+
        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView=findViewById(R.id.recyclerView_list);
+        recyclerView=findViewById(R.id.recyclerView_list);
 
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -142,7 +145,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_databaseReg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                databaseRegLongClick();
+                getArrayList(true);
+                getFirebaseDatabase();
                 return true;
             }
         });
@@ -163,9 +167,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
+
         adapter=new Fine2IncargoListAdapter(listItems,this);
 
+
         recyclerView.setAdapter(adapter);
+
+
         editText_delete=new EditText(this);
 
         adapter.setOnItemClicklistener(new OnListItemClickListener() {
@@ -200,73 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter.setLongClickListener(new OnItemLongClickListener() {
             @Override
             public void onLongItemClick(Fine2IncargoListAdapter.ListViewHolder listViewHolder, View v, int pos) {
-                bl=textView_bl.getText().toString();
-                description=textView_des.getText().toString();
-                location=textView_loc.getText().toString();
-
-                AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("데이터 삭제,화물조회 ")
-
-                        .setMessage("해당 BL 화물에 대한 자료 삭제,조회"+"\n"+bl+"\n" +
-                                description+"\n"+location)
-
-                        .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                AlertDialog.Builder dialog_Delete=new AlertDialog.Builder(MainActivity.this);
-                                dialog_Delete.setTitle("자료삭제 선택창")
-                                        .setMessage("하기 해당 화물에 대한 자료변경을 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+
-                                                "\n"+location)
-                                        .setView(editText_delete)
-                                        .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                String str_delete=editText_delete.getText().toString();
-                                                if(str_delete.equals("02010027")){
-                                                postFirebaseDatabase(false);
-                                                getFirebaseDatabase();
-                                                Toast.makeText(MainActivity.this, "Removed Data", Toast.LENGTH_SHORT).show();}
-                                                else{
-                                                    Toast.makeText(MainActivity.this, "삭제 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-                                                    return;
-                                                }
-
-                                            }
-                                        })
-                                        .setNegativeButton("삭제취소", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
-                                            }
-                                        })
-
-                                        .create()
-                                .show();
-
-
-                            }
-                        })
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(MainActivity.this, "취소 하였습니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNeutralButton("화물조회", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent=new Intent(MainActivity.this,WebList.class);
-                                String data_bl=textView_bl.getText().toString();
-                                intent.putExtra("bl",data_bl);
-                                startActivity(intent);
-
-
-                            }
-                        })
-                        .create()
-                        .show();
-
+            databaseRegLongClick();
             }
         });
 
@@ -284,6 +226,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         consignee=intent.getStringExtra("consignee");
         working=intent.getStringExtra("working");
         lclCargo=intent.getStringExtra("lclCargo");
+        String str_multi="";
+
         if(str_location !=null){
             textView_bl.setText(str_bl);
             textView_des.setText(str_des);
@@ -293,29 +237,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editText_remark.setText(str_remark);
             textView_container.setText(str_container);
             editText_incargo.setText(str_incargo);
+            str_multi=intent.getStringExtra("multi");
         }
-        getFirebaseDatabase();
+        if(str_multi.equals("multi")){
+            databaseRegLongClick();
+        }else{
+            getFirebaseDatabase();
+        }
+
+
+
 
         }
 
     private void databaseRegLongClick() {
-           String location=textView_loc.getText().toString();
-           String count=textView_count.getText().toString();
-           String bl=textView_bl.getText().toString();
-           databaseRef_sort1="bl";
-           databaseRef_sort2=bl;
+        String bl=textView_bl.getText().toString();
+        databaseRef_sort1="bl";
+        databaseRef_sort2=bl;
 
-           getFirebaseDatabase();
-
+        getFirebaseDatabase();
 
 
     }
 
     public void getFirebaseDatabase(){
-
-
             ValueEventListener postListener=new ValueEventListener(){
-
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     listItemsCount=new ArrayList<Fine2IncargoList>();
@@ -327,23 +273,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String count=textView_count.getText().toString();
                         if(databaseRef_sort1.equals("bl")){
                             if(count.equals(data.getCount())){
-                                listItemsCount.add(data);
-
-                            }}
-                        listItems.add(data);
-                    }
-                    if(databaseRef_sort1.equals("bl")){
-                      listItems=listItemsCount;
-                        Log.i("countdata1",String.valueOf(listItems.size()));
+                                listItems.add(data);
+                            }}else{
+                        listItems.add(data);}
                     }
                         listItems.sort(new IncargoListComparator(sort).reversed());
-                    Log.i("countdata2",String.valueOf(listItems.size()));
-
-
                     adapter.notifyDataSetChanged();
-                    if(databaseRef_sort1.equals("bl")){
-               getArrayList();
-                        Log.i("putdatasize", String.valueOf(listItemsCount.size()));}
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -357,10 +292,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-    private void getArrayList() {
+    private void dialogMultiSelect() {
+           AlertDialog.Builder select=new AlertDialog.Builder(MainActivity.this);
+           select.setTitle("로케이션 다중 선택창");
+           select.setMessage("다중항목 등록 선택");
+           select.setPositiveButton("선택", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int which) {
+
+               }
+           });
+           select.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int which) {
+
+               }
+           });
+           select.show();
+    }
+
+    private void getArrayList(boolean add) {
         Map<String,Object> childUpdates=new HashMap<>();
         Map<String,Object> postValues=null;
-
+if(add){
             for(int i=0;i<listItems.size();i++){
 
             bl=listItems.get(i).getBl();
@@ -379,10 +333,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Fine2IncargoList list=new Fine2IncargoList(bl,description,date,count,container,incargo,remark,container40,container20,
                     lclCargo,working,
                     location,consignee);
-                Log.i("putdatalistupdate",String.valueOf(location));
+                Log.i("putdatalistupdate",String.valueOf(listItems.size()));
             postValues=list.toMap();
+        childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);}
         childUpdates.put(bl+"_"+description+"_"+count+"/",postValues);
-
         databaseReference.updateChildren(childUpdates);}
 
         }
@@ -485,6 +439,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.main_menu,menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+           switch(item.getItemId()){
+               case R.id.action_account:
+                   bl=textView_bl.getText().toString();
+                   description=textView_des.getText().toString();
+                   location=textView_loc.getText().toString();
+
+                   AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this);
+                   dialog.setTitle("데이터 삭제,화물조회 ")
+
+                           .setMessage("해당 BL 화물에 대한 자료 삭제,조회"+"\n"+bl+"\n" +
+                                   description+"\n"+location)
+
+                           .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+
+                                   AlertDialog.Builder dialog_Delete=new AlertDialog.Builder(MainActivity.this);
+                                   dialog_Delete.setTitle("자료삭제 선택창")
+                                           .setMessage("하기 해당 화물에 대한 자료변경을 진행 합니다.화물정보 다신 한번 확인후 진행 바랍니다."+"\n"+bl+"\n" + description+
+                                                   "\n"+location)
+                                           .setView(editText_delete)
+                                           .setPositiveButton("자료삭제", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   String str_delete=editText_delete.getText().toString();
+
+
+
+                                               }
+                                           })
+                                           .setNegativeButton("삭제취소", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   Toast.makeText(MainActivity.this, "Cancel Removed Data", Toast.LENGTH_SHORT).show();
+                                               }
+                                           })
+
+                                           .create()
+                                           .show();
+
+
+                               }
+                           })
+                           .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+                                   Toast.makeText(MainActivity.this, "취소 하였습니다.", Toast.LENGTH_SHORT).show();
+                               }
+                           })
+                           .setNeutralButton("화물조회", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+                                   Intent intent=new Intent(MainActivity.this,WebList.class);
+                                   String data_bl=textView_bl.getText().toString();
+                                   intent.putExtra("bl",data_bl);
+                                   startActivity(intent);
+
+
+                               }
+                           })
+                           .create()
+                           .show();
+break;
+
+
+           }
+
+     return true;
     }
     public void longClickItem(){
         bl=textView_bl.getText().toString();

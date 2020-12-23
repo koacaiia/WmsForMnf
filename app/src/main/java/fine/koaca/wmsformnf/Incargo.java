@@ -57,8 +57,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
     String str_sort="long";
     String str_sort_date="today_init";
 
-
-
     TextView incargo_incargo;
     String container40;
     String container20;
@@ -90,8 +88,14 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClicklistener(new OnListItemClickListener() {
+            @Override
+            public void onItemClick(Fine2IncargoListAdapter.ListViewHolder holder, View view, int position) {
 
-        getFirebaseIncargoDatabase();
+            }
+        });
+
+
 
         incargo_location=findViewById(R.id.incargo_location);
         incargo_location.setOnClickListener(new View.OnClickListener() {
@@ -107,14 +111,15 @@ public class Incargo extends AppCompatActivity implements Serializable {
             public boolean onLongClick(View v) {
 
                 sort_dialog="dialogsort";
-                str_sort_date="total";
+                str_sort_date="today_init";
                 str_sort="long";
-
-                dialogMessage(container40,container20,lclcargo,inCargo, consignee_list2);
+                dia_dateInit=new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                getFirebaseIncargoDatabase();
                 return true;
             }
         });
         dia_dateInit=new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        getFirebaseIncargoDatabase();
     }
 
     public void getFirebaseIncargoDatabase(){
@@ -221,7 +226,9 @@ public class Incargo extends AppCompatActivity implements Serializable {
     private void dialogMessage(String[] consignee_list2) {
         final String fixedDate = "날짜지정";
 
+
         ArrayList<String> dateSelected=new ArrayList<String>();
+        dateSelected.add("내일 전체화물 입고 일정");
         dateSelected.add(fixedDate);
         dateSelected.add("이번 주");
         dateSelected.add("다음 주");
@@ -259,13 +266,28 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         builder.setView(view);
         builder.create();
+        AlertDialog ad=builder.create();
         builder.setSingleChoiceItems(dateList,defaultItem,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 CalendarPick calendarPick=new CalendarPick();
                 calendarPick.CalendarCall();
+
                 switch(which){
                     case 0:
+                        String tomorrow=calendarPick.date_tomorrow;
+                        Log.i("datetomorrow",tomorrow);
+                         dia_dateInit=tomorrow;
+                         dia_consignee.setText("All");
+                         str_sort_date="fixed1";
+                         str_sort="sort";
+                         sort_dialog="dialogsort";
+                        getFirebaseIncargoDatabase();
+
+
+
+                        break;
+                    case 1:
                         String a="b";
                         str_sort_date="fixed1";
                         str_sort="sort";
@@ -274,7 +296,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                         DatePickerFragment datePickerFragment=new DatePickerFragment(a);
                         datePickerFragment.show(getSupportFragmentManager(),"datePicker");
                     break;
-                    case 1:
+                    case 2:
 
                         str_sort_date="fixed2";
                         str_sort="sort";
@@ -283,7 +305,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                        dia_dateInit=day_start+"~"+day_end;
 
                         break;
-                    case 2:
+                    case 3:
 
                         str_sort_date="fixed2";
                         str_sort="sort";
@@ -292,21 +314,22 @@ public class Incargo extends AppCompatActivity implements Serializable {
                         dia_dateInit=day_start+"~"+day_end;
 
                                              break;
-                    case 3:
+                    case 4:
                         str_sort="sort";
                         str_sort_date="fixed2";
                         day_start=calendarPick.year+"-"+calendarPick.month+"-"+"01";
                         day_end=calendarPick.year+"-"+calendarPick.month+"-"+calendarPick.date_lastMonth;
                         dia_dateInit=day_start+"~"+day_end;
                         break;
-                    case 4:
+                    case 5:
                        day_start="전체";
                        day_end="조회";
                        str_sort="long";
                        str_sort_date="total";
+                       dia_dateInit="전화물 ";
                         break;
                 }
-                dia_date.setText(day_start+"~"+day_end);
+                dia_date.setText(dia_dateInit);
             }
         });
 
@@ -358,11 +381,10 @@ public class Incargo extends AppCompatActivity implements Serializable {
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(Incargo.this, "입고확인", Toast.LENGTH_SHORT).show();
 
             }
         });
-        dialog.setNegativeButton("전화물조회", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("전체 화물조회", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sort_dialog="dialogsort";

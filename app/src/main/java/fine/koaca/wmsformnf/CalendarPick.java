@@ -19,6 +19,7 @@ public class CalendarPick {
     String date_Nsat;
     String date_startMonth;
     String date_lastMonth;
+    String date_tomorrow;
 
     String year;
     String month;
@@ -37,6 +38,9 @@ public class CalendarPick {
             c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
             date_mon=formatter.format(c.getTime());
             incargo.day_start=formatter.format(c.getTime());
+
+            c.add(c.DATE,2);
+            date_tomorrow=formatter.format(c.getTime());
 
             c.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
 //            c.add(c.DATE,7);

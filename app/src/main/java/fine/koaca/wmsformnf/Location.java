@@ -52,6 +52,7 @@ public class Location extends AppCompatActivity {
     String intent_consignee;
     String intent_working;
     String intent_lclCargo;
+    String intent_multi;
 
     TextView location_bl;
     TextView location_count;
@@ -208,6 +209,8 @@ public class Location extends AppCompatActivity {
         btn_locationReg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
+                intent_multi="multi";
                 String intent_location=textView_location.getText().toString();
                 Intent intent=new Intent(Location.this,MainActivity.class);
                 intent.putExtra("location",intent_location);
@@ -220,10 +223,12 @@ public class Location extends AppCompatActivity {
                 intent.putExtra("incargo",intent_incargo);
                 intent.putExtra("container40",intent_container40);
                 intent.putExtra("container20",intent_container20);
-                        intent.putExtra("consignee", intent_consignee);
-                                intent.putExtra("working", intent_working);
-                                        intent.putExtra("lclCargo",intent_lclCargo);
+                intent.putExtra("consignee", intent_consignee);
+                intent.putExtra("working", intent_working);
+                intent.putExtra("lclCargo",intent_lclCargo);
+                intent.putExtra("multi",intent_multi);
                 startActivity(intent);
+
 
                 return true;
             }
