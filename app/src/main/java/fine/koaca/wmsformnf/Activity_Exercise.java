@@ -29,10 +29,13 @@ public class Activity_Exercise extends AppCompatActivity {
     DatabaseReference databaseReference;
     ArrayList<Fine2IncargoList> listItems=new ArrayList<Fine2IncargoList>();
 
-    static private String SHARE_NAME="SHARE_PREF";
+    ArrayList<String> list_consignee=null;
+
+    static private String SHARE_NAME="SHARE_DEPOT";
     static SharedPreferences sharedPref=null;
     static SharedPreferences.Editor editor=null;
     TextView exr_text;
+    Incargo inCargo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +43,23 @@ public class Activity_Exercise extends AppCompatActivity {
         setContentView(R.layout.activity__exercise);
 
         exr_text=findViewById(R.id.exr_text);
+        inCargo=new Incargo(listItems);
+        listItems=inCargo.listItems;
+
 
         exr_recyclerView=findViewById(R.id.exr_recyclerView);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         exr_recyclerView.setLayoutManager(layoutManager);
         database=FirebaseDatabase.getInstance();
         databaseReference=database.getReference("Incargo");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                listItems.clear();
-                for(DataSnapshot snapshot1:snapshot.getChildren()){
-                    Fine2IncargoList data=snapshot1.getValue(Fine2IncargoList.class);
-                    listItems.add(data);
-                }
-                adapter.notifyDataSetChanged();
-            }
+        getFirebaseDatabase();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         adapter=new IncargoListAdapter(listItems,this);
         exr_recyclerView.setAdapter(adapter);
-        Toast.makeText(this, String.valueOf(listItems.size()), Toast.LENGTH_SHORT).show();
-        AlertDialog.Builder dialog=new AlertDialog.Builder(this);
-        dialog.setTitle("koaca");
-        dialog.show();
+//        Toast.makeText(this, String.valueOf(listItems1.size()), Toast.LENGTH_SHORT).show();
+//        AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+//        dialog.setTitle("koaca");
+//        dialog.show();
 
         sharedPref=getSharedPreferences(SHARE_NAME,MODE_PRIVATE);
         editor= sharedPref.edit();
@@ -77,8 +69,8 @@ public class Activity_Exercise extends AppCompatActivity {
         int btnName=view.getId();
         switch(btnName){
             case R.id.exr_save:
-                String depotName="";
-                saveData(depotName);
+
+                saveData();
                 break;
             case R.id.exr_update:
                 updateData();
@@ -102,7 +94,7 @@ public class Activity_Exercise extends AppCompatActivity {
             dataList +=entry.getKey().toString()+":"+entry.getValue().toString()+"\r\n";
             Log.d("share:",entry.getKey()+":"+entry.getValue());
         }
-        exr_text.setText(dataList);
+//        exr_text.setText(dataList);
     }
 
     private void deleteData() {
@@ -119,13 +111,85 @@ public class Activity_Exercise extends AppCompatActivity {
         editor.apply();
     }
 
-    public void saveData(String depotName) {
+    public void saveData() {
         editor.putBoolean("isShare",true);
         editor.putFloat("fRate",1.33f);
         editor.putInt("nValue",100);
         editor.putString("name","copycoding");
-        editor.putString("depotSortName",depotName);
+
         editor.apply();
+
+    }
+
+//    public void saveDepotData(String depotName){
+//        editor.putString("depotSortname",depotName);
+//        editor.apply();
+//    }
+
+    public void getFirebaseDatabase(){
+
+        list_consignee=new ArrayList<String>();
+        ArrayList<String> list_container=new ArrayList<String>();
+
+        ValueEventListener sortListener= new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listItems.clear();
+                for(DataSnapshot snapshot1:snapshot.getChildren()){
+                    Fine2IncargoList data=snapshot1.getValue(Fine2IncargoList.class);
+                    String consigneeName=data.getConsignee();
+                    String containerName=data.getContainer();
+                    int containerNameLength=containerName.length();
+                    Log.i("containerLength",consigneeName+containerNameLength);
+                    if(containerNameLength==11){
+                        String search_containerName=containerName.substring(containerName.length()-4,containerName.length());
+                        if(search_containerName.equals("0589")){
+                            listItems.add(data);
+                        }else{}
+                    }else{}
+
+
+                    if(!list_consignee.contains(consigneeName)){
+                    list_consignee.add(consigneeName);}
+//                    listItems.add(data);
+                }
+                for(int i=0;i<list_consignee.size();i++ ){
+                    String consigneeName2=list_consignee.get(i);
+                    exr_text.append(consigneeName2+"\n");
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+        databaseReference.addListenerForSingleValueEvent(sortListener);
+        String[] arr_consignee=list_consignee.toArray(new String[list_consignee.size()]);
+//        exr_text.setText(arr_consignee);
+        int list_consignee_init=0;
+//       for(String str:list_consignee){
+//           exr_text.append(str+",");
+//
+//        }
+
+
+
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                listItems.clear();
+//                for(DataSnapshot snapshot1:snapshot.getChildren()){
+//                    Fine2IncargoList data=snapshot1.getValue(Fine2IncargoList.class);
+//                    listItems.add(data);
+//                }
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
     }
 }

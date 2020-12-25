@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,10 +20,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,7 +45,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
-    String sort="date";
     String sort_dialog="dialogsort";
     String sortConsignee;
 
@@ -56,6 +59,9 @@ public class Incargo extends AppCompatActivity implements Serializable {
     String str_sort_date="today_init";
 
     TextView incargo_incargo;
+    TextView incargo_contents_date;
+    TextView incargo_contents_consignee;
+    String incargo_consignee;
     String container40;
     String container20;
     String lclcargo;
@@ -68,14 +74,43 @@ public class Incargo extends AppCompatActivity implements Serializable {
     String day_end;
     String dia_dateInit="";
 
+    String depotName;
+
+    static private String SHARE_NAME="SHARE_DEPOT";
+    static SharedPreferences sharedPref;
+    static SharedPreferences.Editor editor;
+
+    FloatingActionButton fltBtn;
+
+    public Incargo(ArrayList<Fine2IncargoList> listItems) {
+        this.listItems=listItems;
+    }
+
+    public Incargo(){
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incargo);
 
+//        sharedPref=getSharedPreferences(SHARE_NAME,MODE_PRIVATE);
+        if(sharedPref==null){
+            depotName="2물류(02010027)";
+        }else{
+            sharedPref=getSharedPreferences(SHARE_NAME,MODE_PRIVATE);
+            depotName=sharedPref.getString("depotName",null);
+        }
+        Log.i("depotInit",depotName);
+
+
         dataMessage = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
+
         incargo_incargo=findViewById(R.id.incargo_incargo);
+        incargo_contents_date=findViewById(R.id.incargo_contents_date);
+        incargo_contents_consignee=findViewById(R.id.incargo_contents_consignee);
         incargo_mnf=findViewById(R.id.incargo_mnf);
         recyclerView=findViewById(R.id.incargo_recyclerViewList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -83,7 +118,21 @@ public class Incargo extends AppCompatActivity implements Serializable {
         listItems=new ArrayList<>();
 
         database=FirebaseDatabase.getInstance();
-        databaseReference=database.getReference("Incargo");
+        switch(depotName){
+            case "2물류(02010027)":
+                databaseReference=database.getReference("Incargo");
+                break;
+            case "1물류(02010810)":
+                databaseReference=database.getReference("Incargo");
+                Log.i("depotSort1","1물류 화물조회는 아직 미구현 입니다.");
+                break;
+            case "(주)화인통상 창고사업부":
+                databaseReference=database.getReference("Incargo");
+                Log.i("depotSort2","사업부 화물조회는 아직 미구현 입니다.");
+                break;
+        }
+
+
 
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
@@ -133,6 +182,54 @@ public class Incargo extends AppCompatActivity implements Serializable {
         });
         dia_dateInit=new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         getFirebaseIncargoDatabase();
+        incargo_consignee="전 화물";
+        incargo_contents_date.setText(dia_dateInit);
+        incargo_contents_consignee.setText(incargo_consignee+"_"+"입고현황");
+
+        fltBtn=findViewById(R.id.incargo_floatBtn);
+        fltBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchSort();
+            }
+        });
+
+    }
+
+    private void searchSort() {
+        AlertDialog.Builder searchBuilder=new AlertDialog.Builder(Incargo.this);
+        final EditText editText=new EditText(this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        searchBuilder.setTitle("B/L 또는 컨테이너 번호 조회");
+        searchBuilder.setMessage("마지막 4자리 번호 입력 바랍니다.");
+        searchBuilder.setView(editText);
+
+        searchBuilder.setPositiveButton("Bl", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String sortContents=editText.getText().toString();
+                Log.i("sortContents",sortContents);
+                Toast.makeText(getApplicationContext(), sortContents, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        searchBuilder.setNegativeButton("container", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        searchBuilder.setNeutralButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        searchBuilder.show();
+
+
+
     }
 
     private void sortGetFirebaseIncargoDatabase(String filterItemName,String sortItemName) {
@@ -143,8 +240,13 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 listItems.clear();
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
+
+                    if(!dia_dateInit.equals(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()))){
+                        listItems.add(data);
+                    }else{
+
                     if(dia_dateInit.equals(data.getDate())){
-                    listItems.add(data);}
+                    listItems.add(data);}}
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -296,6 +398,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 sortConsignee=consignee_list2[position];
                 Log.i("koaca_consignee",sortConsignee);
                 dia_consignee.setText(sortConsignee);
+                incargo_contents_consignee.setText("_"+sortConsignee+"_입고현황");
+
             }
 
             @Override
@@ -305,8 +409,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
         });
 
         builder.setView(view);
-        builder.create();
-        AlertDialog ad=builder.create();
+//        builder.create();
+//        AlertDialog ad=builder.create();
         builder.setSingleChoiceItems(dateList,defaultItem,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -369,6 +473,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                         break;
                 }
                 dia_date.setText(dia_dateInit);
+                incargo_contents_date.setText(dia_dateInit);
             }
         });
 
@@ -417,6 +522,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
         AlertDialog.Builder dialog=new AlertDialog.Builder(Incargo.this);
         dialog.setTitle(dia_dateInit+"__"+"입고 화물 현황");
+        incargo_contents_date.setText(dia_dateInit);
         dialog.setMessage(container40 +"\n"+container20 +"\n"+ lclcargo+"\n"+inCargo);
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
@@ -457,32 +563,44 @@ public class Incargo extends AppCompatActivity implements Serializable {
     }
    @Override
     public boolean onOptionsItemSelected(MenuItem item){
+       sharedPref=getSharedPreferences(SHARE_NAME,MODE_PRIVATE);
+       editor= sharedPref.edit();
         switch(item.getItemId()){
             case R.id.action_account:
                 ArrayList<String> depotSort=new ArrayList<String>();
                 depotSort.add("1물류(02010810)");
-                depotSort.add("2물류(20210027)");
+                depotSort.add("2물류(02010027)");
                 depotSort.add("(주)화인통상 창고사업부");
 
                 ArrayList selectedItems=new ArrayList();
                 int defaultItem=0;
                 selectedItems.add(defaultItem);
 
+                Activity_Exercise exercise=new Activity_Exercise();
+
                 String[] depotSortList=depotSort.toArray(new String[depotSort.size()]);
                 AlertDialog.Builder sortBuilder=new AlertDialog.Builder(Incargo.this);
                 sortBuilder.setSingleChoiceItems(depotSortList,defaultItem,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(Incargo.this, "koaca", Toast.LENGTH_SHORT).show();
-                        String depotName=depotSortList[which];
-                        Activity_Exercise exercise=new Activity_Exercise();
-                        exercise.saveData(depotName);
+                        depotName=depotSortList[which];
+
+
+                        Log.i("depo1",depotName);
+
+
 
                     }
                 });
                 sortBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        editor.putString("depotName",depotName);
+                        Log.i("depo2",depotName);
+                        editor.apply();
+
+                        Intent intent=new Intent(Incargo.this,Incargo.class);
+                        startActivity(intent);
 
 
                     }

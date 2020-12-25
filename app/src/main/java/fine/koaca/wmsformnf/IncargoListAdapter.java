@@ -79,16 +79,16 @@ public class IncargoListAdapter extends RecyclerView.Adapter<IncargoListAdapter.
         holder.bl.setText(list.get(position).getBl());
         holder.des.setText(list.get(position).getDescription());
         holder.incargo.setText(list.get(position).getIncargo()+"(PLT)");
-        if (position<list.size()-1){
-//            String location_chk3=list.get(position-1).getContainer();
-            String location_chk1=list.get(position).getContainer();
-            String location_chk2=list.get(position+1).getContainer();
-            if (location_chk1.equals(location_chk2)) {
-                holder.itemView.setBackgroundColor(Color.BLUE);
-            } else {
-                holder.itemView.setBackgroundColor(Color.WHITE);
-
-        }}
+//        if (position<list.size()-1){
+////            String location_chk3=list.get(position-1).getContainer();
+//            String location_chk1=list.get(position).getContainer();
+//            String location_chk2=list.get(position+1).getContainer();
+//            if (location_chk1.equals(location_chk2)) {
+//                holder.itemView.setBackgroundColor(Color.BLUE);
+//            } else {
+//                holder.itemView.setBackgroundColor(Color.WHITE);
+//
+//        }}
     }
 
     @Override
