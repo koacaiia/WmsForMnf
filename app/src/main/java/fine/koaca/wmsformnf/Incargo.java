@@ -2,10 +2,10 @@ package fine.koaca.wmsformnf;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,12 +13,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +30,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 
 public class Incargo extends AppCompatActivity implements Serializable {
     ArrayList<Fine2IncargoList> listItems;
@@ -54,6 +51,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
     String dataMessage;
     Button incargo_location;
+    Button incargo_mnf;
     String str_sort="long";
     String str_sort_date="today_init";
 
@@ -78,6 +76,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
         dataMessage = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
         incargo_incargo=findViewById(R.id.incargo_incargo);
+        incargo_mnf=findViewById(R.id.incargo_mnf);
         recyclerView=findViewById(R.id.incargo_recyclerViewList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -105,24 +104,30 @@ public class Incargo extends AppCompatActivity implements Serializable {
             }
         });
 
-        incargo_location=findViewById(R.id.incargo_location);
+        incargo_location=findViewById(R.id.incargo_reset);
         incargo_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Incargo.this,MainActivity.class);
-                startActivity(intent);
-                Toast.makeText(Incargo.this, "엠엔에프 로케이션 Activity 실행", Toast.LENGTH_SHORT).show();
-            }
-        });
-        incargo_location.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
                 sort_dialog="dialogsort";
                 str_sort_date="today_init";
                 str_sort="long";
                 dia_dateInit=new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
                 getFirebaseIncargoDatabase();
+            }
+        });
+        incargo_mnf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Incargo.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        incargo_mnf.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent=new Intent(Incargo.this,Activity_Exercise.class);
+                startActivity(intent);
                 return true;
             }
         });
@@ -159,8 +164,10 @@ public class Incargo extends AppCompatActivity implements Serializable {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
                 arrConsignee.clear();
-
-
+                container40="";
+                container20="";
+                lclcargo="";
+                inCargo="";
 
                 ArrayList<Integer> list_40 = new ArrayList<Integer>();
                 ArrayList<Integer> list_20=new ArrayList<Integer>();
@@ -241,9 +248,11 @@ public class Incargo extends AppCompatActivity implements Serializable {
       switch(str_sort_date){
           case "total":
           sortbyDate = databaseReference.orderByChild("date");
+              Log.i("dateInit","total");
           break;
           case "fixed1":
               sortbyDate=databaseReference.orderByChild("date").equalTo(dia_dateInit);
+
               break;
           case "fixed2":
               sortbyDate=databaseReference.orderByChild("date").startAt(day_start).endAt(day_end);
@@ -253,7 +262,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                       databaseReference.orderByChild("date").equalTo(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
       }
         sortbyDate.addListenerForSingleValueEvent(incargoListener);
-      Log.i("dateInit",dia_dateInit);
+
     }
 
     private void dialogMessage(String[] consignee_list2) {
@@ -303,13 +312,12 @@ public class Incargo extends AppCompatActivity implements Serializable {
             public void onClick(DialogInterface dialog, int which) {
                 CalendarPick calendarPick=new CalendarPick();
                 calendarPick.CalendarCall();
-
+                dia_consignee.setText("All");
                 switch(which){
                     case 0:
                         String tomorrow=calendarPick.date_tomorrow;
                         Log.i("datetomorrow",tomorrow);
                          dia_dateInit=tomorrow;
-                         dia_consignee.setText("All");
                          str_sort_date="fixed1";
                          str_sort="sort";
                          sort_dialog="dialogsort";
@@ -322,10 +330,10 @@ public class Incargo extends AppCompatActivity implements Serializable {
                         String a="b";
                         str_sort_date="fixed1";
                         str_sort="sort";
-                        dia_dateInit=dia_date.getText().toString();
 
                         DatePickerFragment datePickerFragment=new DatePickerFragment(a);
                         datePickerFragment.show(getSupportFragmentManager(),"datePicker");
+
                     break;
                     case 2:
 
@@ -399,6 +407,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
         String year_string=Integer.toString(year);
         dataMessage=(year_string+"-"+month_string+"-"+day_string);
         dia_date.setText(dataMessage);
+        dia_dateInit=dataMessage;
 
     }
 
@@ -445,6 +454,51 @@ public class Incargo extends AppCompatActivity implements Serializable {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.main_menu,menu);
         return super.onCreateOptionsMenu(menu);
+    }
+   @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_account:
+                ArrayList<String> depotSort=new ArrayList<String>();
+                depotSort.add("1물류(02010810)");
+                depotSort.add("2물류(20210027)");
+                depotSort.add("(주)화인통상 창고사업부");
+
+                ArrayList selectedItems=new ArrayList();
+                int defaultItem=0;
+                selectedItems.add(defaultItem);
+
+                String[] depotSortList=depotSort.toArray(new String[depotSort.size()]);
+                AlertDialog.Builder sortBuilder=new AlertDialog.Builder(Incargo.this);
+                sortBuilder.setSingleChoiceItems(depotSortList,defaultItem,new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(Incargo.this, "koaca", Toast.LENGTH_SHORT).show();
+                        String depotName=depotSortList[which];
+                        Activity_Exercise exercise=new Activity_Exercise();
+                        exercise.saveData(depotName);
+
+                    }
+                });
+                sortBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                });
+                sortBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                sortBuilder.show();
+
+                break;
+        }
+        return true;
+
     }
 
 

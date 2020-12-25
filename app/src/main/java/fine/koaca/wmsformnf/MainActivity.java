@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String databaseRef_sort1="consignee";
     String databaseRef_sort2="코만";
 
-    ArrayList<String> databasePutList;
 
     RecyclerView recyclerView;
 

@@ -19,22 +19,55 @@
             android:id="@+id/exr_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="1">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/exr_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="TextView" />
 
-        <Button
-            android:id="@+id/button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Button" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/exr_save"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="btnClick"
+                android:text="Save" />
+
+            <Button
+                android:id="@+id/exr_update"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="btnClick"
+                android:text="Update" />
+
+            <Button
+                android:id="@+id/exr_delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="btnClick"
+                android:text="Delete" />
+
+            <Button
+                android:id="@+id/exr_clear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="btnClick"
+                android:text="Clear" />
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
