@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class List implements Serializable {
+public class List<S> implements Serializable {
     String bl;
     String description;
     String location;

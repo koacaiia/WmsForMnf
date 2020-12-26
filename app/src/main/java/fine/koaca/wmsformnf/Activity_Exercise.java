@@ -5,21 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Activity_Exercise extends AppCompatActivity {
@@ -135,29 +136,58 @@ public class Activity_Exercise extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
+                ArrayList<String > arr_containerName=new ArrayList<String>();
+                ArrayList<Activity_Exercise_list> filter_list=new ArrayList<Activity_Exercise_list>();
+
                 for(DataSnapshot snapshot1:snapshot.getChildren()){
                     Fine2IncargoList data=snapshot1.getValue(Fine2IncargoList.class);
-                    String consigneeName=data.getConsignee();
+                    Activity_Exercise_list filterdata=snapshot1.getValue(Activity_Exercise_list.class);
                     String containerName=data.getContainer();
-                    int containerNameLength=containerName.length();
-                    Log.i("containerLength",consigneeName+containerNameLength);
-                    if(containerNameLength==11){
-                        String search_containerName=containerName.substring(containerName.length()-4,containerName.length());
-                        if(search_containerName.equals("0589")){
-                            listItems.add(data);
-                        }else{}
-                    }else{}
-
-
-                    if(!list_consignee.contains(consigneeName)){
-                    list_consignee.add(consigneeName);}
+                    arr_containerName.add(containerName);
+                    filter_list.add(filterdata);
+                    listItems.add(data);
+                }
+                String[] container_list=arr_containerName.toArray(new String[arr_containerName.size()]);
+                arr_containerName.clear();
+                for(String item:container_list){
+                    if(! arr_containerName.contains(item))
+                    arr_containerName.add(item);
+                               }
+//                listItems.clear();
+//                String array_container_list= Arrays.toString(container_list);
+//                Log.i("listsize1",String.valueOf(listItems.size()));
+//                for(DataSnapshot snapshot2:snapshot.getChildren()){
+//                    Fine2IncargoList data=snapshot2.getValue(Fine2IncargoList.class);
+////                        if(! data.getContainer().contains(array_container_list))
+//                    if(!listItems.contains(array_container_list))
 //                    listItems.add(data);
+//                }
+
+                int listItemsSize=listItems.size();
+                for(int i=0;i<listItems.size()-2;i++){
+                    String container20=listItems.get(i+1).getContainer20();
+                    String container40=listItems.get(i+1).getContainer40();
+                    String lclcargo=listItems.get(i+1).getLclcargo();
+                    String containerName3=listItems.get(i).getContainer();
+                    String containerName1=listItems.get(i+1).getContainer();
+                    String containerName2=listItems.get(i+2).getContainer();
+
+                    if(container20.equals("0")&&container40.equals("0")&&lclcargo.equals("0")){
+                        listItems.remove(i+1);
+                    }
+                    if(containerName3.equals(containerName1)||containerName2.equals(containerName1)){
+                        listItems.remove(i+1);
+                    }
+
+
+
                 }
-                for(int i=0;i<list_consignee.size();i++ ){
-                    String consigneeName2=list_consignee.get(i);
-                    exr_text.append(consigneeName2+"\n");
-                }
+
                 adapter.notifyDataSetChanged();
+                Log.i("listSize2",String.valueOf(listItems.size()));
+                Log.i("listSize3",String.valueOf(arr_containerName.size()));
+//                Log.i("listArr",array_container_list);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
@@ -190,6 +220,66 @@ public class Activity_Exercise extends AppCompatActivity {
 //
 //            }
 //        });
+
+    }
+    public static class Activity_Exercise_list{
+        String list_containerName;
+        String list_container40;
+        String list_container20;
+        String list_consignee;
+        public Activity_Exercise_list(){
+
+        }
+
+        public Activity_Exercise_list(String list_containerName, String list_container40, String list_container20,String list_consignee) {
+            this.list_containerName = list_containerName;
+            this.list_container40 = list_container40;
+            this.list_container20 = list_container20;
+            this.list_consignee = list_consignee;
+        }
+
+
+        public String getList_containerName() {
+            return list_containerName;
+        }
+
+        public void setList_containerName(String list_containerName) {
+            this.list_containerName = list_containerName;
+        }
+
+        public String getList_container40() {
+            return list_container40;
+        }
+
+        public void setList_container40(String list_container40) {
+            this.list_container40 = list_container40;
+        }
+
+        public String getList_container20() {
+            return list_container20;
+        }
+
+        public void setList_container20(String list_container20) {
+            this.list_container20 = list_container20;
+        }
+
+        public String getList_consignee() {
+            return list_consignee;
+        }
+
+        public void setList_consignee(String list_consignee) {
+            this.list_consignee = list_consignee;
+        }
+        @Exclude
+        public Map<String,Object> toMap(){
+            HashMap<String,Object> result=new HashMap<>();
+
+            result.put("container",list_containerName);
+            result.put("container40",list_container40);
+            result.put("container20",list_container20);
+            result.put("consignee",list_consignee);
+            return result;
+        }
 
     }
 }

@@ -132,9 +132,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 Log.i("depotSort2","사업부 화물조회는 아직 미구현 입니다.");
                 break;
         }
-
-
-
         adapter=new IncargoListAdapter(listItems,this);
         recyclerView.setAdapter(adapter);
         adapter.setAdapterClickListener(new IncargoListAdapter.AdapterClickListener() {
@@ -283,8 +280,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
 
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=dataSnapshot.getValue(Fine2IncargoList.class);
-
-
                     if(str_sort.equals("long")){
                         listItems.add(data);}
                     else if(str_sort.equals("sort")){
@@ -306,8 +301,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 int sumIncargo=0;
                 for(int i=0;i<listItems_count;i++){
                     String str_consignee=listItems.get(i).getConsignee();
-
-
                     int int_40=Integer.parseInt(listItems.get(i).getContainer40());
                     int int_20=Integer.parseInt(listItems.get(i).getContainer20());
                     int int_lclcargo=Integer.parseInt(listItems.get(i).getLclcargo());
@@ -543,7 +536,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 str_sort="long";
                 dia_dateInit="전체";
                 getFirebaseIncargoDatabase();
-
             }
         });
         dialog.setNeutralButton("조건별 화물 조회", new DialogInterface.OnClickListener() {
@@ -555,8 +547,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 getFirebaseIncargoDatabase();
             }
         });
-
-
         dialog.show();
 
     }
@@ -589,12 +579,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         depotName=depotSortList[which];
-
-
                         Log.i("depo1",depotName);
-
-
-
                     }
                 });
                 sortBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -603,11 +588,8 @@ public class Incargo extends AppCompatActivity implements Serializable {
                         editor.putString("depotName",depotName);
                         Log.i("depo2",depotName);
                         editor.apply();
-
                         Intent intent=new Intent(Incargo.this,Incargo.class);
                         startActivity(intent);
-
-
                     }
                 });
                 sortBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -629,7 +611,6 @@ public class Incargo extends AppCompatActivity implements Serializable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listItems.clear();
-
                 for(DataSnapshot searchsnapshot:snapshot.getChildren()){
                     Fine2IncargoList data=searchsnapshot.getValue(Fine2IncargoList.class);
                     int containerNameLength=data.getContainer().length();
