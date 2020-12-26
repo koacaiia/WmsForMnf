@@ -81,6 +81,7 @@ public class Incargo extends AppCompatActivity implements Serializable {
     static SharedPreferences.Editor editor;
 
     FloatingActionButton fltBtn;
+    String searchContents;
 
     public Incargo(ArrayList<Fine2IncargoList> listItems) {
         this.listItems=listItems;
@@ -209,14 +210,18 @@ public class Incargo extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String sortContents=editText.getText().toString();
-                Log.i("sortContents",sortContents);
-                Toast.makeText(getApplicationContext(), sortContents, Toast.LENGTH_SHORT).show();
+                searchContents="bl";
+                searchFirebaseDatabaseToArray(sortContents);
 
             }
         });
         searchBuilder.setNegativeButton("container", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String sortContents=editText.getText().toString();
+                searchContents="container";
+                searchFirebaseDatabaseToArray(sortContents);
+
 
             }
         });
@@ -617,6 +622,54 @@ public class Incargo extends AppCompatActivity implements Serializable {
         }
         return true;
 
+    }
+
+    public void searchFirebaseDatabaseToArray(String sortContents){
+        ValueEventListener listener= new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listItems.clear();
+
+                for(DataSnapshot searchsnapshot:snapshot.getChildren()){
+                    Fine2IncargoList data=searchsnapshot.getValue(Fine2IncargoList.class);
+                    int containerNameLength=data.getContainer().length();
+                    int blNameLength=data.getBl().length();
+
+                  switch(searchContents){
+                      case "container":
+                          if(containerNameLength==11){
+                              String sort_contentsName=data.getContainer().substring(data.getContainer().length()-4,
+                                      data.getContainer().length());
+                              if(sortContents.equals(sort_contentsName)){
+                                  listItems.add(data);
+
+                              }else{;
+                              }
+                          }else{}
+                          break;
+                      case "bl":
+                         if(blNameLength>4){
+                          String sort_contentsName=data.getBl().substring(data.getBl().length()-4,
+                                      data.getBl().length());
+                          if(sortContents.equals(sort_contentsName)){
+                                  listItems.add(data);
+                          }else{
+                          }}else{}
+
+                          break;
+                  }
+
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        databaseReference.addListenerForSingleValueEvent(listener);
     }
 
 
