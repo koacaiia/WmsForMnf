@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="fine.koaca.wmsformnf">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WmsForMnf">
-        <activity android:name=".Activity_Exercise"></activity>
+        <activity android:name=".Activity_Exercise">
+
+        </activity>
         <activity
             android:name=".Incargo"
             android:label="Incargo_List">
@@ -30,6 +40,18 @@
         <activity
             android:name=".MainActivity"
             android:label="엠엔에프 로케이션 관리" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="fine.koaca.wmsformnf.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:readPermission="true"
+            android:writePermission="true"
+            android:permission="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/external" />
+        </provider>
     </application>
 
 </manifest>

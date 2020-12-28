@@ -191,6 +191,14 @@ public class Incargo extends AppCompatActivity implements Serializable {
                 searchSort();
             }
         });
+        fltBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent=new Intent(Incargo.this,CameraCapture.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
     }
 

@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +29,9 @@ import java.util.Date;
 public class CameraCapture extends AppCompatActivity {
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
-    String [] permission_list={Manifest.permission.CAMERA};
+    String [] permission_list={Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE};
     TextView camera_date;
     TextView camera_bl;
     TextView camera_count;
@@ -42,6 +46,7 @@ public class CameraCapture extends AppCompatActivity {
     FloatingActionButton btn_capture;
 
     CaptureProcess captureProcess;
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,17 @@ public class CameraCapture extends AppCompatActivity {
                 captureProcess.captureProcess();
             }
         });
+
+        btn_capture.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                 captureProcess.getImageDown_temp();
+
+                return true;
+            }
+        });
+
+
         camera_date=findViewById(R.id.camera_textView_date);
         camera_date.setText(intent_camera_date);
         camera_bl=findViewById(R.id.camera_textView_bl);
@@ -156,4 +172,6 @@ public class CameraCapture extends AppCompatActivity {
         Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
 
     }
+
+
 }
